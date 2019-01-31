@@ -70,3 +70,9 @@ func Fatal(l interface{}) {
 		"SERVICE": "WINGO",
 	}).Fatalln(l)
 }
+
+func CheckOrFatal(e error) {
+	if e != nil {
+		Fatal(e)
+	}
+}
