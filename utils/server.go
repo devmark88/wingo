@@ -9,6 +9,6 @@ import (
 //Start => Start Server
 func Start(r *gin.Engine) {
 	handlers.Setup(r)
-
+	Debug("SERVER RUNNING")
 	r.Run(viper.Get("server.address").(string))
 }
