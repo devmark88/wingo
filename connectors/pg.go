@@ -12,7 +12,7 @@ import (
 )
 
 // ConnectDatabase => Connect to Postgres Database
-func ConnectDatabase() {
+func ConnectDatabase() *DB {
 	h := viper.GetString("Database.host")
 	p := viper.GetInt("database.port")
 	pwd := viper.GetString("database.password")
@@ -29,4 +29,5 @@ func ConnectDatabase() {
 	err = pdb.Ping()
 	utils.CheckOrFatal(err)
 	utils.Debug("Connected to PSQL => " + connStr)
+	return pdb
 }
