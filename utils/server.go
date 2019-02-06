@@ -8,7 +8,8 @@ import (
 
 //Start => Start Server
 func Start(r *gin.Engine) {
-	handlers.Setup(r)
+	ctx := handlers.AppContext{}
+	handlers.Setup(r, ctx)
 	Debug("SERVER RUNNING")
 	r.Run(viper.Get("server.address").(string))
 }

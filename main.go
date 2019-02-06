@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.com/mt-api/wingo/connectors"
 	"gitlab.com/mt-api/wingo/middlewares"
 	"gitlab.com/mt-api/wingo/utils"
 )
@@ -11,7 +10,6 @@ func main() {
 
 	utils.InitConfig("config.yaml", "WINGO")
 	r := gin.New()
-	connectors.ConnectDatabase()
 	middlewares.ApplyGin(r)
 
 	r.Use(gin.Logger())
