@@ -3,6 +3,8 @@ package v1
 import (
 	"net/http"
 
+	"gitlab.com/mt-api/wingo/response"
+
 	"gitlab.com/mt-api/wingo/repository"
 
 	"github.com/gin-gonic/gin"
@@ -27,5 +29,17 @@ func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 	}
 	meta := m.ToModel()
 	r.AddMeta(&meta)
-	c.JSON(http.StatusOK, meta)
+	res := response.AddMeta{
+		ID:                         meta.ID,
+		AppID:                      meta.AppID,
+		Title:                      meta.Title,
+		Prize:                      meta.Prize,
+		Duration:                   meta.Duration,
+		NeededCorrectors:           meta.NeededCorrectors,
+		AllowedCorrectorUsageTimes: meta.AllowedCorrectorUsageTimes,
+		AllowCorrectTilQuestion:    meta.AllowCorrectTilQuestion,
+		NeededTickets:              meta.NeededTickets,
+	}
+	res.BeginTime = m.BeginTime.UTC().String()
+	c.JSON(http.StatusOK, res)
 }
