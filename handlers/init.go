@@ -15,5 +15,6 @@ func Setup(r *gin.Engine, appCtx *context.AppContext) {
 	admin := v1.Group("/admin")
 	{
 		admin.POST("contest/meta", vh.AddMetaContest)
+		admin.POST("contest/question", vh.AttachQuestion)
 	}
 }

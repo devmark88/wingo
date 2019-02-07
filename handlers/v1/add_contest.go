@@ -3,9 +3,9 @@ package v1
 import (
 	"net/http"
 
-	"gitlab.com/mt-api/wingo/response"
-
+	"gitlab.com/mt-api/wingo/model"
 	"gitlab.com/mt-api/wingo/repository"
+	"gitlab.com/mt-api/wingo/response"
 
 	"github.com/gin-gonic/gin"
 	"gitlab.com/mt-api/wingo/context"
@@ -28,7 +28,7 @@ func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 		return
 	}
 	meta := m.ToModel()
-	err := r.AddMeta(&meta)
+	err := r.AddMeta(meta)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":  err.Error(),
@@ -36,6 +36,38 @@ func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 		})
 		return
 	}
+
+	c.JSON(http.StatusOK, mapMetaModelToResponse(meta))
+}
+
+func (h *V1Handlers) AttachQuestion(c *gin.Context) {
+	var m request.AttachQuestion
+	r := repository.Connections{DB: h.Context.Connections.Database}
+	c.Header("Content-Type", "application/json; charset=utf-8")
+	if err := c.Bind(&m); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":  err.Error(),
+			"status": http.StatusBadRequest,
+		})
+		return
+	}
+	md, err := m.ToModel()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	if err = r.AddContest(md); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":  err.Error(),
+			"status": http.StatusBadRequest,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, mapContestToResponse(md))
+}
+
+func mapMetaModelToResponse(meta *model.ContestMeta) response.AddMeta {
 	res := response.AddMeta{
 		ID:                         meta.ID,
 		AppID:                      meta.AppID,
@@ -47,6 +79,11 @@ func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 		AllowCorrectTilQuestion:    meta.AllowCorrectTilQuestion,
 		NeededTickets:              meta.NeededTickets,
 	}
-	res.BeginTime = m.BeginTime.UTC().String()
-	c.JSON(http.StatusOK, res)
+	res.BeginTime = meta.BeginTime.UTC().String()
+	return res
+}
+func mapContestToResponse(contest *model.Contest) response.AttachQuestion {
+	res := response.AttachQuestion{}
+	res.Result = true
+	return res
 }

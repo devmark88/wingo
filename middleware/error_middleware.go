@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gopkg.in/go-playground/validator.v9"
+	"gopkg.in/go-playground/validator.v8"
 )
 
 var (
@@ -14,7 +14,7 @@ var (
 )
 
 func validationErrorToText(e validator.FieldError) string {
-	switch e.Tag() {
+	switch e.Tag {
 	case "required":
 		return fmt.Sprintf("%s is required", e.Field)
 	case "max":
@@ -25,8 +25,9 @@ func validationErrorToText(e validator.FieldError) string {
 		return fmt.Sprintf("Invalid email format")
 	case "len":
 		return fmt.Sprintf("%s must be %s characters long", e.Field, e.Param)
+	default:
+		return fmt.Sprintf("%s is not valid", e.Field)
 	}
-	return fmt.Sprintf("%s is not valid", e.Field)
 }
 
 func Errors() gin.HandlerFunc {
@@ -44,11 +45,10 @@ func Errors() gin.HandlerFunc {
 					}
 				case gin.ErrorTypeBind:
 					errs := e.Err.(validator.ValidationErrors)
-					list := make(map[int]string)
+					list := make(map[string]string)
 
-					fmt.Println(errs)
 					for field, err := range errs {
-						list[field] = validationErrorToText(err)
+						list[field] = validationErrorToText(*err)
 					}
 					// Make sure we maintain the preset response status
 					status := http.StatusBadRequest
