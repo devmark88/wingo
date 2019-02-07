@@ -28,7 +28,14 @@ func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 		return
 	}
 	meta := m.ToModel()
-	r.AddMeta(&meta)
+	err := r.AddMeta(&meta)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":  err.Error(),
+			"status": http.StatusBadRequest,
+		})
+		return
+	}
 	res := response.AddMeta{
 		ID:                         meta.ID,
 		AppID:                      meta.AppID,

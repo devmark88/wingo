@@ -10,7 +10,7 @@ type Connections struct {
 	DB *gorm.DB
 }
 
-func (cn *Connections) AddMeta(m *model.ContestMeta) {
+func (cn *Connections) AddMeta(m *model.ContestMeta) error {
 	r := contest.MetaRepository{}
-	r.SaveMeta(m, cn.DB)
+	return r.SaveMeta(m, cn.DB)
 }
