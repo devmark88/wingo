@@ -12,3 +12,4 @@
 *.out
 wingo
 config.yaml
+.vscode/
