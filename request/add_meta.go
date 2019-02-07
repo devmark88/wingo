@@ -18,7 +18,7 @@ type AddMetaRequest struct {
 	NeededTickets              uint8     `json:"incomingCost" xml:"incomingCost" binding:"required"`
 }
 
-func (r *AddMetaRequest) ToModel() model.ContestMeta {
+func (r *AddMetaRequest) ToModel() *model.ContestMeta {
 	m := model.ContestMeta{}
 	m.AppID = r.AppID
 	m.Title = r.Title
@@ -29,5 +29,5 @@ func (r *AddMetaRequest) ToModel() model.ContestMeta {
 	m.AllowedCorrectorUsageTimes = r.AllowedCorrectorUsageTimes
 	m.AllowCorrectTilQuestion = r.AllowCorrectTilQuestion
 	m.NeededTickets = r.NeededTickets
-	return m
+	return &m
 }
