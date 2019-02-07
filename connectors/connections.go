@@ -6,4 +6,5 @@ import (
 
 type Connections struct {
 	Database *gorm.DB
+	Cache    *interface{}
 }
