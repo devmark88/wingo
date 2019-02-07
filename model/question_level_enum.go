@@ -12,6 +12,7 @@ const (
 	Medium   QuestionLevelEnum = "medium"
 	Hard     QuestionLevelEnum = "hard"
 	Cruel    QuestionLevelEnum = "cruel"
+	Unknown  QuestionLevelEnum = "unknown"
 )
 
 func (e *QuestionLevelEnum) Scan(value interface{}) error {
