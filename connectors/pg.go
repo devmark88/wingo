@@ -31,7 +31,6 @@ func ConnectDatabase() *gorm.DB {
 	err = db.DB().Ping()
 	logger.CheckOrFatal(err)
 	logger.Debug("connected to postgres")
-	defer db.Close()
 	db.AutoMigrate(&model.ContestMeta{}, &model.Contest{}, &model.Question{}, &model.UserInfo{}, &model.UserTrack{})
 	logger.Debug("migrated")
 
