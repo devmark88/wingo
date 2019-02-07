@@ -8,6 +8,6 @@ type AppContext struct {
 }
 
 //Setup => Setup application handlers
-func Setup(r *gin.Engine, appCtx AppContext) {
+func Setup(r *gin.Engine, appCtx *AppContext) {
 
 }
