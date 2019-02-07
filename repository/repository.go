@@ -15,6 +15,6 @@ func (cn *Connections) AddMeta(m *model.ContestMeta) error {
 	return r.SaveMeta(m, cn.DB)
 }
 func (cn *Connections) AddContest(m *model.Contest) error {
-	r := contest.MetaRepository{}
+	r := contest.QuestionRepository{}
 	return r.SaveContest(m, cn.DB)
 }
