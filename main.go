@@ -12,6 +12,7 @@ func main() {
 	utils.InitConfig("config.yaml", "WINGO")
 	r := gin.New()
 	db := connectors.ConnectDatabase()
+	db.LogMode(true)
 	cn := connectors.Connections{Database: db}
 	middleware.ApplyGin(r)
 	// r.Use(middleware.Errors())
