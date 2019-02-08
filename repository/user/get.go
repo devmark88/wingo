@@ -11,11 +11,11 @@ import (
 
 type UserGetRepository struct{}
 
-func (r *UserGetRepository) GetUserInfo(u string, db *gorm.DB) (*model.UserInfo, error) {
+func (r *UserGetRepository) GetUserInfo(u string, db *gorm.DB) (error, *model.UserInfo) {
 	var d model.UserInfo
 	db.Where("ID=?", u).Find(&d)
 	if len(d.ID) == 0 {
-		return nil, fmt.Errorf(messages.NOT_FOUND, "user", "ID", u)
+		return fmt.Errorf(messages.NOT_FOUND, "user", "ID", u), nil
 	}
-	return &d, nil
+	return nil, &d
 }
