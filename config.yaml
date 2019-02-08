@@ -12,3 +12,12 @@ log:
 secrets:
   admin: './secrets/pub.admin.pem'
   user: './secrets/pub.user.pem'
+redis:
+  address: "localhost"
+  pool:  0 # zero = 10 * cpu cores
+  timeout:
+    dial: "5s"
+    read: "3s"
+    write: "3s"
+    pool: "4s"
+    idle: "5m"
