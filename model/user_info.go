@@ -1,7 +1,7 @@
 package model
 
 type UserInfo struct {
-	Base
+	ID         string `gorm:"primary_key"`
 	Correctors uint
 	Tickets    uint
 }
