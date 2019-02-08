@@ -26,7 +26,7 @@ func (h *V1Handlers) GetContestMeta(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	_, err = createMetaResponse(m)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -69,5 +69,5 @@ func findNextContestInRange(m []*model.ContestMeta) *model.ContestMeta {
 	if next.ID == 0 {
 		return nil
 	}
-	return next
+	return &next
 }
