@@ -1,12 +1,13 @@
 package response
 
 type GetMetaResponse struct {
-	HoursToNextContest       string `json:"hoursToNextContest"`
-	MinToNextContest         string `json:"minToNextContest"`
+	NextContestInHours       string `json:"hoursToNextContest"`
+	NextContestInMinutes     string `json:"minToNextContest"`
+	NextContestInSeconds     string `json:"secToNextContest"`
 	Prize                    uint   `json:"nextRoundPrice"`
-	Tickets                  uint   `json:"userCredit"`
 	NextContestNeededTickets byte   `json:"incomeTicketCount"`
-	Correctors               uint   `json:"correctorCount"`
+	Tickets                  uint8  `json:"userCredit"`
+	Correctors               uint8  `json:"correctorCount"`
 	SeekSeconds              uint   `json:"seekSeconds"`
 	IsInDeadline             bool   `json:"isInDeadline"`
 	SecondsToStart           uint   `json:"secondsToStart"`
