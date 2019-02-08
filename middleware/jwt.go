@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"gitlab.com/mt-api/wingo/context"
@@ -21,6 +22,7 @@ type appClaim struct {
 	Issuer      string     `json:"iss"`
 	Cellphone   string     `json:"sub"`
 	Username    string     `json:"name"`
+	IsAdmin     bool       `json:"admin"`
 	App         labelClaim `json:"app"`
 }
 type labelClaim struct {
@@ -67,9 +69,7 @@ func Auth(app *context.AppContext, rsaPub *rsa.PublicKey) gin.HandlerFunc {
 
 func extractClaims(claims jwt.MapClaims, cls *appClaim) error {
 	var lbl labelClaim
-	l := claims["app"].(map[string]interface{})
-	lbl.EnglishName = l["enName"].(string)
-	lbl.PersianName = l["faName"].(string)
+
 	cls.ID = claims["id"].(string)
 	cls.Avatar = claims["avatar"].(string)
 	cls.AccessLevel = claims["accessLevel"].(string)
@@ -80,6 +80,18 @@ func extractClaims(claims jwt.MapClaims, cls *appClaim) error {
 	if claims["name"] != nil && claims["name"] != "unknown" {
 		cls.Username = claims["name"].(string)
 	}
-	cls.App = lbl
+	if claims["admin"] != nil {
+		str := claims["name"].(string)
+		b, e := strconv.ParseBool(str)
+		if e != nil {
+			cls.IsAdmin = b
+		}
+	}
+	if claims["app"] != nil {
+		l := claims["app"].(map[string]interface{})
+		lbl.EnglishName = l["enName"].(string)
+		lbl.PersianName = l["faName"].(string)
+		cls.App = lbl
+	}
 	return nil
 }
