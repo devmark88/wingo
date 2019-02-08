@@ -8,13 +8,8 @@ import (
 	"gitlab.com/mt-api/wingo/response"
 
 	"github.com/gin-gonic/gin"
-	"gitlab.com/mt-api/wingo/context"
 	"gitlab.com/mt-api/wingo/request"
 )
-
-type V1Handlers struct {
-	Context *context.AppContext
-}
 
 func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 	var m request.AddMetaRequest
