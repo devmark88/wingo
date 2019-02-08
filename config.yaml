@@ -9,3 +9,6 @@ database:
   ssl: "disable" # require, verify-full, verify-ca
 log:
   level: debug
+secrets:
+  admin: './secrets/pub.admin.pem'
+  user: './secrets/pub.user.pem'
