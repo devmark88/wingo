@@ -9,6 +9,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var LogLevel string
+
 func init() {
 	// Log as JSON instead of the default ASCII formatter.
 	log.SetFormatter(&log.JSONFormatter{})
@@ -32,6 +34,7 @@ func init() {
 		log.SetLevel(log.TraceLevel)
 		l = "trace"
 	}
+	LogLevel = l
 	fmt.Println(fmt.Sprintf("Log level set to '%s'", l))
 
 }
@@ -75,4 +78,19 @@ func CheckOrFatal(e error) {
 	if e != nil {
 		Fatal(e)
 	}
+}
+
+// LogWriter log writer interface
+type DebugWriter interface {
+	Debug(v ...interface{})
+}
+
+// Logger default logger
+type Logger struct {
+	DebugWriter
+}
+
+// Print format & print log
+func (logger Logger) Print(values ...interface{}) {
+	Debug(values)
 }
