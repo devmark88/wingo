@@ -12,3 +12,5 @@
 *.out
 wingo
 config.yaml
+.vscode/
+secrets/*.pem
