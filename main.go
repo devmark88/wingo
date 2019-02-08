@@ -12,7 +12,8 @@ func main() {
 	utils.InitConfig("config.yaml", "WINGO")
 	r := gin.New()
 	db := connectors.ConnectDatabase()
-	cn := connectors.Connections{Database: db}
+	rcn := connectors.CreateRedis()
+	cn := connectors.Connections{Database: db, Cache: rcn}
 	middleware.ApplyGin(r)
 	// r.Use(middleware.Errors())
 
