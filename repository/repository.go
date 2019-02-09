@@ -29,17 +29,21 @@ func (cn *Connections) AddMeta(m *model.ContestMeta) error {
 	return err
 }
 
-func (cn *Connections) GetMeta(force bool) (error, []*model.ContestMeta) {
+func (cn *Connections) GetMeta(force bool) (error, *[]model.ContestMeta) {
 	r := contest.MetaRepository{}
-	err, t := r.GetTodayMeta(cn.DB, force, 3)
-	if err == nil {
-		c := CacheAdapter{Connection: cn.Redis}
-		er := c.SetContestMeta(t)
-		if er != nil {
-			logger.Error(fmt.Errorf("error while saving meta into redis: %v", er))
+	c := CacheAdapter{Connection: cn.Redis}
+	t := c.ContestMeta()
+	if t == nil {
+		err, t := r.GetTodayMeta(cn.DB, force, 3)
+		if err == nil {
+			er := c.SetContestMeta(t)
+			if er != nil {
+				logger.Error(fmt.Errorf("error while saving meta into redis: %v", er))
+			}
 		}
+		return err, t
 	}
-	return err, t
+	return nil, t
 }
 func (cn *Connections) AddContest(m *model.Contest) error {
 	r := contest.QuestionRepository{}
@@ -47,9 +51,22 @@ func (cn *Connections) AddContest(m *model.Contest) error {
 }
 func (cn *Connections) GetUserInfo(id string) (error, *model.UserInfo) {
 	r := user.UserGetRepository{}
-	return r.GetUserInfo(id, cn.DB)
+	c := CacheAdapter{Connection: cn.Redis}
+	u := c.GetUserInfo(id)
+	if u == nil {
+		err, u := r.GetUserInfo(id, cn.DB)
+		if err == nil {
+			er := c.SetUserInfo(*u)
+			if er != nil {
+				logger.Error(fmt.Errorf("error while saving user info into redis user:%v => err: %v", u, er))
+			}
+		}
+		return err, u
+	}
+	return nil, u
 }
 func (cn *Connections) AddUserInfo(u *model.UserInfo) error {
 	r := user.UserSaveRepository{}
 	return r.SaveUserInfo(u, cn.DB)
 }
+
