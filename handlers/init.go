@@ -49,7 +49,7 @@ func Setup(r *gin.Engine, appCtx *context.AppContext) {
 
 	// add auth middleware
 	contest.Use(middleware.Auth(appCtx, appCtx.UserKey))
-	admin.Use(middleware.Auth(appCtx, appCtx.AdminKey))
+	// admin.Use(middleware.Auth(appCtx, appCtx.AdminKey))
 
 	// admin routes
 	admin.POST("contest/meta", vh.AddMetaContest)
