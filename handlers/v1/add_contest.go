@@ -13,7 +13,7 @@ import (
 
 func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 	var m request.AddMetaRequest
-	r := repository.Connections{DB: h.Context.Connections.Database}
+	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache}
 	c.Header("Content-Type", "application/json; charset=utf-8")
 	if err := c.Bind(&m); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -37,7 +37,7 @@ func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 
 func (h *V1Handlers) AttachQuestion(c *gin.Context) {
 	var m request.AttachQuestion
-	r := repository.Connections{DB: h.Context.Connections.Database}
+	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache}
 	c.Header("Content-Type", "application/json; charset=utf-8")
 	if err := c.Bind(&m); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
