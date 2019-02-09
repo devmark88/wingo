@@ -1,14 +1,32 @@
 package response
 
 type GetMetaResponse struct {
-	HoursToNextContest       string `json:"hoursToNextContest"`
-	MinToNextContest         string `json:"minToNextContest"`
-	Prize                    uint   `json:"nextRoundPrice"`
-	Tickets                  uint   `json:"userCredit"`
-	NextContestNeededTickets byte   `json:"incomeTicketCount"`
-	Correctors               uint   `json:"correctorCount"`
-	SeekSeconds              uint   `json:"seekSeconds"`
-	IsInDeadline             bool   `json:"isInDeadline"`
-	SecondsToStart           uint   `json:"secondsToStart"`
-	VideoUrl                 string `json:"videoUrl"`
+	NextContestInHours       string     `json:"hoursToNextContest"`
+	NextContestInMinutes     string     `json:"minToNextContest"`
+	NextContestInSeconds     string     `json:"secToNextContest"`
+	Prize                    uint       `json:"nextRoundPrice"`
+	NextContestNeededTickets byte       `json:"incomeTicketCount"`
+	Tickets                  uint       `json:"userCredit"`
+	Correctors               uint       `json:"correctorCount"`
+	SeekSeconds              uint       `json:"seekSeconds"`
+	IsInDeadline             bool       `json:"isInDeadline"`
+	SecondsToStart           uint       `json:"secondsToStart"`
+	VideoUrl                 string     `json:"videoUrl"`
+	ShareData                ShareData  `json:"shareData"`
+	Timeline                 []Timeline `json:"timeline"`
+}
+type ShareData struct {
+	Url         string `json:"url"`
+	Title       string `json:"title"`
+	Message     string `json:"message"`
+	DialogTitle string `json:"dialogTitle"`
+}
+
+type Timeline struct {
+	Text      string `json:"text"`
+	IsPast    bool   `json:"isPast"`
+	IsCurrent bool   `json:"isCurrent"`
+	StartTime string `json:"startTime"`
+	Prize     uint   `json:"prize"`
+	Currency  string `json:"currency"`
 }
