@@ -26,8 +26,7 @@ func (h *V1Handlers) GetContestMeta(c *gin.Context) {
 		})
 		return
 	}
-	
-	_, err = createMetaResponse(m)
+	err, u := r.GetUserInfo(h.Context.AuthUser.ID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":  err.Error(),
@@ -35,9 +34,17 @@ func (h *V1Handlers) GetContestMeta(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, m)
+	res, err := createMetaResponse(m, u, h.Context.AuthUser.Username)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":  err.Error(),
+			"status": http.StatusBadRequest,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, res)
 }
-func createMetaResponse(m []*model.ContestMeta) (response.GetMetaResponse, error) {
+func createMetaResponse(m []*model.ContestMeta, u *model.UserInfo, un string) (response.GetMetaResponse, error) {
 	res := response.GetMetaResponse{}
 	next := findNextContestInRange(m)
 	if next == nil {
@@ -51,11 +58,39 @@ func createMetaResponse(m []*model.ContestMeta) (response.GetMetaResponse, error
 		res.NextContestInSeconds = fmt.Sprintf("%v", s)
 		res.Prize = next.Prize
 		res.NextContestNeededTickets = next.NeededTickets
-		// res.Tickets = next.NeededTickets
-		// res.Correctors = next.NeededCorrectors
+		res.Tickets = u.Tickets
+		res.Correctors = u.Correctors
 	}
-
+	res.ShareData = response.ShareData{
+		Title:   "بیا بازی کنیم",
+		Message: fmt.Sprintf(`سلامَلِکُم – استاد چند روزه درگیره یه بازی شدم که حالم خرابه – میخوای حالت خراب بشه بکوف روی لینک زیر و با کد معرف %s ثبت نام کن `, un),
+	}
+	res.ShareData.DialogTitle = res.ShareData.Title
+	res.Timeline = generateTimelineResponse(m)
 	return res, nil
+}
+func generateTimelineResponse(m []*model.ContestMeta) []response.Timeline {
+	var tl []response.Timeline
+	idx := -1
+	for i, c := range m {
+		t := response.Timeline{}
+		t.Currency = "تومان"
+		t.Prize = c.Prize
+		t.StartTime = helpers.TimeInTehran(c.BeginTime).String()
+		t.Text = c.Title
+		t.IsCurrent = false
+		t.IsPast = helpers.IsPast(c.BeginTime)
+		if t.IsPast == true {
+			idx = i
+		}
+		tl = append(tl, t)
+	}
+	if idx != -1 {
+		tl[idx+1].IsCurrent = true
+	} else {
+		tl[0].IsCurrent = true
+	}
+	return tl
 }
 func findNextContestInRange(m []*model.ContestMeta) *model.ContestMeta {
 	var next model.ContestMeta
@@ -69,5 +104,5 @@ func findNextContestInRange(m []*model.ContestMeta) *model.ContestMeta {
 	if next.ID == 0 {
 		return nil
 	}
-	return next
+	return &next
 }
