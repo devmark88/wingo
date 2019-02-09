@@ -26,3 +26,7 @@ app:
     default_hour: "9"
     default_min: "30"
     default_sec: "00"
+emq:
+  auth:
+    username: "wingo"
+    password: "Mjg1ODc3NzUyOTg4NjQ3MjgxNzA3NzA3MzUxMzM1NTY3MzG"
