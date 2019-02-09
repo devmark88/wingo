@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/spf13/viper"
+
 	"gitlab.com/mt-api/wingo/helpers"
 
 	"gitlab.com/mt-api/wingo/model"
@@ -16,7 +18,7 @@ import (
 )
 
 func (h *V1Handlers) GetContestMeta(c *gin.Context) {
-	r := repository.Connections{DB: h.Context.Connections.Database}
+	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache}
 	c.Header("Content-Type", "application/json; charset=utf-8")
 	err, m := r.GetMeta(true)
 	if err != nil {
@@ -48,9 +50,9 @@ func createMetaResponse(m []*model.ContestMeta, u *model.UserInfo, un string) (r
 	res := response.GetMetaResponse{}
 	next := findNextContestInRange(m)
 	if next == nil {
-		res.NextContestInHours = "09"
-		res.NextContestInMinutes = "30"
-		res.NextContestInSeconds = "00"
+		res.NextContestInHours = viper.GetString("app.next_contest.default_hour")
+		res.NextContestInMinutes = viper.GetString("app.next_contest.default_min")
+		res.NextContestInSeconds = viper.GetString("app.next_contest.default_sec")
 	} else {
 		h, m, s := helpers.GetTime(helpers.TimeInTehran(next.BeginTime))
 		res.NextContestInHours = fmt.Sprintf("%v", h)
