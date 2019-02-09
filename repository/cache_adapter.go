@@ -29,6 +29,10 @@ func (c *CacheAdapter) SetContestMeta(v []*model.ContestMeta) error {
 	}
 	return c.Connection.Set(fmt.Sprintf("meta:contest:%s", getDateForKey(time.Now())), serialized, time.Hour*24).Err()
 }
+func (c *CacheAdapter) InvalidateContestMeta() error {
+	key := fmt.Sprintf("meta:contest:%s", getDateForKey(time.Now()))
+	return c.Connection.Del(key).Err()
+}
 
 func getDateForKey(t time.Time) string {
 	t = helpers.TimeInTehran(t)
