@@ -18,3 +18,14 @@ func GetTime(t time.Time) (hour int, minute int, second int) {
 	}
 	return timeStamp.Clock()
 }
+func IsPast(t time.Time) bool {
+	d := TimeInTehran(t)
+	n := TimeInTehran(time.Now())
+	return n.Sub(d) > 0
+}
+
+func IsFuture(t time.Time) bool {
+	d := TimeInTehran(t)
+	n := TimeInTehran(time.Now())
+	return n.Sub(d) < 0
+}
