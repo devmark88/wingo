@@ -23,7 +23,7 @@ func (cn *Connections) AddMeta(m *model.ContestMeta) error {
 		c := CacheAdapter{Connection: cn.Redis}
 		er := c.InvalidateContestMeta()
 		if er != nil {
-			logger.Error(fmt.Errorf("error while invalidating meta into redis: %v", er))
+			logger.Error(fmt.Errorf("error while invalidating contest meta cache: %v", er))
 		}
 	}
 	return err
@@ -32,7 +32,7 @@ func (cn *Connections) AddMeta(m *model.ContestMeta) error {
 func (cn *Connections) GetMeta(force bool) (error, *[]model.ContestMeta) {
 	r := contest.MetaRepository{}
 	c := CacheAdapter{Connection: cn.Redis}
-	t := c.ContestMeta()
+	t := c.GetContestMeta()
 	if t == nil {
 		err, t := r.GetTodayMeta(cn.DB, force, 3)
 		if err == nil {
@@ -67,6 +67,13 @@ func (cn *Connections) GetUserInfo(id string) (error, *model.UserInfo) {
 }
 func (cn *Connections) AddUserInfo(u *model.UserInfo) error {
 	r := user.UserSaveRepository{}
-	return r.SaveUserInfo(u, cn.DB)
+	err := r.SaveUserInfo(u, cn.DB)
+	if err != nil {
+		c := CacheAdapter{Connection: cn.Redis}
+		e := c.InvalidateUserInfo(u.ID)
+		if e != nil {
+			logger.Error(fmt.Errorf("error while invalidating user info cache: %v", e))
+		}
+	}
+	return err
 }
-
