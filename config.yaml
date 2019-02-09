@@ -13,7 +13,7 @@ secrets:
   admin: './secrets/pub.admin.pem'
   user: './secrets/pub.user.pem'
 redis:
-  address: "localhost"
+  address: "localhost:6379"
   pool:  0 # zero = 10 * cpu cores
   timeout:
     dial: "5s"
