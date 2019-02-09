@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -20,6 +21,13 @@ func (c *CacheAdapter) GetUserInfo(id string) *model.UserInfo {
 }
 func (c *CacheAdapter) ContestMeta() []*model.ContestMeta {
 	return nil
+}
+func (c *CacheAdapter) SetContestMeta(v []*model.ContestMeta) error {
+	serialized, err := json.Marshal(v)
+	if err != nil {
+		return fmt.Errorf("error in marshal to json : %v", err)
+	}
+	return c.Connection.Set(fmt.Sprintf("meta:contest:%s", getDateForKey(time.Now())), serialized, time.Hour*24).Err()
 }
 
 func getDateForKey(t time.Time) string {
