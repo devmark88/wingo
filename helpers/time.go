@@ -18,6 +18,9 @@ func GetTime(t time.Time) (hour int, minute int, second int) {
 	}
 	return timeStamp.Clock()
 }
+func GetDate(t time.Time) (year int, month int, day int) {
+	return t.Year(), int(t.Month()), t.Day()
+}
 func IsPast(t time.Time) bool {
 	d := TimeInTehran(t)
 	n := TimeInTehran(time.Now())

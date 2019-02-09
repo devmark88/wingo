@@ -21,3 +21,8 @@ redis:
     write: "3s"
     pool: "4s"
     idle: "5m"
+app:
+  next_contest:
+    default_hour: "9"
+    default_min: "30"
+    default_sec: "00"
