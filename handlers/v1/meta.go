@@ -46,9 +46,9 @@ func (h *V1Handlers) GetContestMeta(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
-func createMetaResponse(m []*model.ContestMeta, u *model.UserInfo, un string) (response.GetMetaResponse, error) {
+func createMetaResponse(m *[]model.ContestMeta, u *model.UserInfo, un string) (response.GetMetaResponse, error) {
 	res := response.GetMetaResponse{}
-	next := findNextContestInRange(m)
+	next := findNextContestInRange(*m)
 	if next == nil {
 		res.NextContestInHours = viper.GetString("app.next_contest.default_hour")
 		res.NextContestInMinutes = viper.GetString("app.next_contest.default_min")
@@ -68,10 +68,10 @@ func createMetaResponse(m []*model.ContestMeta, u *model.UserInfo, un string) (r
 		Message: fmt.Sprintf(`سلامَلِکُم – استاد چند روزه درگیره یه بازی شدم که حالم خرابه – میخوای حالت خراب بشه بکوف روی لینک زیر و با کد معرف %s ثبت نام کن `, un),
 	}
 	res.ShareData.DialogTitle = res.ShareData.Title
-	res.Timeline = generateTimelineResponse(m)
+	res.Timeline = generateTimelineResponse(*m)
 	return res, nil
 }
-func generateTimelineResponse(m []*model.ContestMeta) []response.Timeline {
+func generateTimelineResponse(m []model.ContestMeta) []response.Timeline {
 	var tl []response.Timeline
 	idx := -1
 	for i, c := range m {
@@ -94,12 +94,12 @@ func generateTimelineResponse(m []*model.ContestMeta) []response.Timeline {
 	}
 	return tl
 }
-func findNextContestInRange(m []*model.ContestMeta) *model.ContestMeta {
+func findNextContestInRange(m []model.ContestMeta) *model.ContestMeta {
 	var next model.ContestMeta
 	now := helpers.TimeInTehran(time.Now())
 	for _, c := range m {
 		if helpers.TimeInTehran(c.BeginTime).Sub(now) > 0 {
-			next = *c
+			next = c
 			break
 		}
 	}
