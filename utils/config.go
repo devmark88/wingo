@@ -12,10 +12,10 @@ func InitConfig(path, prefix string) {
 	viper.SetConfigType("yaml")
 	viper.SetEnvPrefix(prefix)
 	viper.AddConfigPath(".")
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.AutomaticEnv()
-
 	err := viper.ReadInConfig()
+
 	if err != nil {
 		log.Fatal(err)
 	}

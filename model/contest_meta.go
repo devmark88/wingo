@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"time"
 )
 
@@ -15,4 +16,8 @@ type ContestMeta struct {
 	AllowedCorrectorUsageTimes uint8
 	AllowCorrectTilQuestion    uint8
 	NeededTickets              uint8
+}
+
+func (c ContestMeta) MarshalBinary() ([]byte, error) {
+	return json.Marshal(c)
 }
