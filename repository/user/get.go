@@ -13,7 +13,9 @@ type UserGetRepository struct{}
 
 func (r *UserGetRepository) GetUserInfo(u string, db *gorm.DB) (error, *model.UserInfo) {
 	var d model.UserInfo
-	db.Where("ID=?", u).Find(&d)
+	if result := db.Where("id=?", u).Find(&d); result.Error != nil {
+		return fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, result.GetErrors())), nil
+	}
 	if len(d.ID) == 0 {
 		return fmt.Errorf(messages.NOT_FOUND, "user", "ID", u), nil
 	}
