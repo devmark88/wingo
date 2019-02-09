@@ -29,7 +29,6 @@ func (c *CacheAdapter) GetUserInfo(id string) *model.UserInfo {
 	json.Unmarshal(b, &u)
 	return &u
 }
-
 func (c *CacheAdapter) SetUserInfo(u model.UserInfo) error {
 	serialized, err := json.Marshal(u)
 	if err != nil {
@@ -37,7 +36,11 @@ func (c *CacheAdapter) SetUserInfo(u model.UserInfo) error {
 	}
 	return c.Connection.Set(fmt.Sprintf("user:%s", u.ID), serialized, 0).Err()
 }
-func (c *CacheAdapter) ContestMeta() *[]model.ContestMeta {
+func (c *CacheAdapter) InvalidateUserInfo(id string) error {
+	return c.Connection.Del(fmt.Sprintf("user:%s", id)).Err()
+}
+
+func (c *CacheAdapter) GetContestMeta() *[]model.ContestMeta {
 	k := fmt.Sprintf("meta:contest:%s", getDateForKey(time.Now()))
 	var cm []model.ContestMeta
 	b, e := c.Connection.Get(k).Bytes()
