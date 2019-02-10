@@ -1,15 +1,20 @@
 package q
 
 import (
+	"fmt"
+
 	"github.com/RichardKnop/machinery/v1"
 	"github.com/RichardKnop/machinery/v1/config"
 )
 
-func Start() *machinery.Server {
+func Start(n int) (*machinery.Server, *[]machinery.Worker, error) {
+	if n == 0 {
+		n = 1
+	}
 	var cnf = &config.Config{
-		Broker:        "redis://localhost:6379",
+		Broker:        "amqp://guest:guest@localhost:5672/",
 		DefaultQueue:  "machinery_tasks",
-		ResultBackend: "amqp://guest:guest@localhost:5672/",
+		ResultBackend: "redis://localhost:6379",
 		AMQP: &config.AMQPConfig{
 			Exchange:     "machinery_exchange",
 			ExchangeType: "direct",
@@ -19,7 +24,19 @@ func Start() *machinery.Server {
 
 	server, err := machinery.NewServer(cnf)
 	if err != nil {
-		// do something with the error
+		return nil, nil, err
 	}
-	return server
+	var workers []machinery.Worker
+	for i := 0; i < n; i++ {
+		worker := server.NewWorker(fmt.Sprintf("worker_%v", i), 10)
+		go worker.Launch()
+
+		workers = append(workers, *worker)
+	}
+	registerTasks(server)
+	return server, &workers, nil
+}
+
+func registerTasks(s *machinery.Server) {
+	s.RegisterTasks(GetTasks())
 }
