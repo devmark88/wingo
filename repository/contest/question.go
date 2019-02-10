@@ -3,6 +3,10 @@ package contest
 import (
 	"fmt"
 
+	"gitlab.com/mt-api/wingo/logger"
+
+	"gitlab.com/mt-api/wingo/q"
+
 	"github.com/jinzhu/gorm"
 	"gitlab.com/mt-api/wingo/messages"
 	"gitlab.com/mt-api/wingo/model"
@@ -37,6 +41,17 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB) error {
 			tx.Rollback()
 			return fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, result.GetErrors()))
 		}
+	}
+	var meta model.ContestMeta
+	db.Where("id = ?", m.ContestMetaID).First(&meta)
+	m.Meta = meta
+	g := q.Question{}
+	e := g.PublishAll(*m)
+	if e != nil {
+		logger.Error(e)
+		logger.Debug("rolling back the transaction")
+		logger.Debug("transaction rolled back")
+		return e
 	}
 	if result := tx.Commit(); result.Error != nil {
 		tx.Rollback()

@@ -54,17 +54,17 @@ func Info(l interface{}) {
 }
 
 //Debug => Log Everything
-func Debug(l interface{}) {
+func Debug(l ...interface{}) {
 	log.WithFields(log.Fields{
 		"SERVICE": "WINGO",
-	}).Debugln(l)
+	}).Debugln(l...)
 }
 
 //Error => Log Everything
-func Error(l interface{}) {
+func Error(l ...interface{}) {
 	log.WithFields(log.Fields{
 		"SERVICE": "WINGO",
-	}).Errorln(l)
+	}).Errorln(l...)
 }
 
 //Fatal => Log Everything

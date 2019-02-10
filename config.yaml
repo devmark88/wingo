@@ -22,11 +22,13 @@ redis:
     pool: "4s"
     idle: "5m"
 app:
+  answer_delay: 15
   next_contest:
     default_hour: "9"
     default_min: "30"
     default_sec: "00"
 emq:
+  base: "http://localhost:8080"
   auth:
     username: "wingo"
     password: "Mjg1ODc3NzUyOTg4NjQ3MjgxNzA3NzA3MzUxMzM1NTY3MzG"
