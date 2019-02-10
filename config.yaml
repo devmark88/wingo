@@ -31,4 +31,4 @@ emq:
   base: "http://localhost:8080"
   auth:
     username: "wingo"
-    password: "Mjg1ODc3NzUyOTg4NjQ3MjgxNzA3NzA3MzUxMzM1NTY3MzG"
+    password: "Mjg1ODk1MDY4NDE5NDM0MTA4NTA0MDQ0MjI5NjQ0MTI0MTG"
