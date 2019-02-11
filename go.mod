@@ -2,6 +2,7 @@ module gitlab.com/mt-api/wingo
 
 require (
 	cloud.google.com/go v0.36.0 // indirect
+	github.com/RichardKnop/machinery v1.5.5
 	github.com/denisenkom/go-mssqldb v0.0.0-20190204142019-df6d76eb9289 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect

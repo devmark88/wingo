@@ -3,6 +3,8 @@ package repository
 import (
 	"fmt"
 
+	"github.com/RichardKnop/machinery/v1"
+
 	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 	"gitlab.com/mt-api/wingo/logger"
@@ -14,6 +16,7 @@ import (
 type Connections struct {
 	DB    *gorm.DB
 	Redis *redis.Client
+	Queue *machinery.Server
 }
 
 func (cn *Connections) AddMeta(m *model.ContestMeta) error {
@@ -47,7 +50,7 @@ func (cn *Connections) GetMeta(force bool) (error, *[]model.ContestMeta) {
 }
 func (cn *Connections) AddContest(m *model.Contest) error {
 	r := contest.QuestionRepository{}
-	return r.SaveContest(m, cn.DB)
+	return r.SaveContest(m, cn.DB, cn.Queue)
 }
 func (cn *Connections) GetUserInfo(id string) (error, *model.UserInfo) {
 	r := user.UserGetRepository{}

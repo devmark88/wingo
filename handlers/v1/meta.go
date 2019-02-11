@@ -18,7 +18,7 @@ import (
 )
 
 func (h *V1Handlers) GetContestMeta(c *gin.Context) {
-	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache}
+	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
 	c.Header("Content-Type", "application/json; charset=utf-8")
 	err, m := r.GetMeta(true)
 	if err != nil {
