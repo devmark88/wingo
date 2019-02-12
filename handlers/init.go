@@ -40,7 +40,7 @@ const (
 
 //Setup => Setup application handlers
 func Setup(r *gin.Engine, appCtx *context.AppContext) {
-	vh := m.V1Handlers{Context: appCtx}
+	vh := m.Handlers{Context: appCtx}
 	v1 := r.Group("/v1")
 
 	// Define Groups
