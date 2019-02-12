@@ -14,8 +14,10 @@ import (
 	"gitlab.com/mt-api/wingo/model"
 )
 
+// MetaRepository : Metadata repository
 type MetaRepository struct{}
 
+// SaveMeta : Add metadata to the database
 func (r *MetaRepository) SaveMeta(m *model.ContestMeta, db *gorm.DB) error {
 	m.BeginTime = helpers.TimeInTehran(m.BeginTime)
 	s := m.BeginTime
@@ -31,7 +33,11 @@ func (r *MetaRepository) SaveMeta(m *model.ContestMeta, db *gorm.DB) error {
 	}
 	return nil
 }
-func (r *MetaRepository) GetTodayMeta(db *gorm.DB, force bool, limit int) (error, *[]model.ContestMeta) {
+
+// GetTodayMeta : get today contests meta data
+// if force is true it will return {limit} number of meta data
+// which they will start in the future
+func (r *MetaRepository) GetTodayMeta(db *gorm.DB, force bool, limit int) (*[]model.ContestMeta, error) {
 	s := helpers.TimeInTehran(now.BeginningOfDay())
 	e := helpers.TimeInTehran(now.EndOfDay())
 	d := []model.ContestMeta{}
@@ -46,9 +52,9 @@ func (r *MetaRepository) GetTodayMeta(db *gorm.DB, force bool, limit int) (error
 		}
 	}
 	if db.Error != nil {
-		return fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, db.GetErrors())), nil
+		return nil, fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, db.GetErrors()))
 	}
-	return nil, &d
+	return &d, nil
 }
 
 func reverseMetaArray(m []model.ContestMeta) {

@@ -1,5 +1,6 @@
 package response
 
+// AddMeta : AddMeta response
 type AddMeta struct {
 	ID                         uint   `json:"id"`
 	AppID                      string `json:"app"`

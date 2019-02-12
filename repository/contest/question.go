@@ -14,8 +14,10 @@ import (
 	"gitlab.com/mt-api/wingo/model"
 )
 
+//QuestionRepository ...
 type QuestionRepository struct{}
 
+//SaveContest : Add questions with answers to corresponding contest
 func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *machinery.Server) error {
 	x := model.Contest{}
 	db.Table("contests").Where("contest_meta_id = ?", m.ContestMetaID).Find(&x)
@@ -48,7 +50,7 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *mac
 	db.Where("id = ?", m.ContestMetaID).First(&meta)
 	m.Meta = meta
 	g := q.Question{}
-	e := g.PublishAll2(*m, srv)
+	e := g.PublishAll(*m, srv)
 	if e != nil {
 		logger.Error(e)
 		logger.Debug("rolling back the transaction")

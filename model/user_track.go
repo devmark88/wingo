@@ -4,6 +4,7 @@ import (
 	"database/sql"
 )
 
+// UserTrack : UserTrackModel
 type UserTrack struct {
 	Base
 	ContestID             uint

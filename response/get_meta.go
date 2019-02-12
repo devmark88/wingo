@@ -1,5 +1,6 @@
 package response
 
+// GetMetaResponse : GetMetaResponse response
 type GetMetaResponse struct {
 	NextContestInHours       string     `json:"hoursToNextContest"`
 	NextContestInMinutes     string     `json:"minToNextContest"`
@@ -11,17 +12,20 @@ type GetMetaResponse struct {
 	SeekSeconds              uint       `json:"seekSeconds"`
 	IsInDeadline             bool       `json:"isInDeadline"`
 	SecondsToStart           uint       `json:"secondsToStart"`
-	VideoUrl                 string     `json:"videoUrl"`
+	VideoURL                 string     `json:"videoUrl"`
 	ShareData                ShareData  `json:"shareData"`
 	Timeline                 []Timeline `json:"timeline"`
 }
+
+// ShareData : ShareData response
 type ShareData struct {
-	Url         string `json:"url"`
+	URL         string `json:"url"`
 	Title       string `json:"title"`
 	Message     string `json:"message"`
 	DialogTitle string `json:"dialogTitle"`
 }
 
+// Timeline : Timeline response
 type Timeline struct {
 	Text      string `json:"text"`
 	IsPast    bool   `json:"isPast"`
