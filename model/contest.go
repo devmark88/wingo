@@ -1,5 +1,6 @@
 package model
 
+// Contest : Contest Model
 type Contest struct {
 	Base
 	ContestMetaID         uint64
