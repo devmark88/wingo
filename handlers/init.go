@@ -57,4 +57,5 @@ func Setup(r *gin.Engine, appCtx *context.AppContext) {
 
 	// contest routes
 	contest.GET("meta", vh.FindContestMeta)
+	contest.POST("answer", vh.PostAnswer)
 }
