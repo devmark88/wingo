@@ -17,8 +17,8 @@ import (
 	"gitlab.com/mt-api/wingo/repository"
 )
 
-// GetContestMeta : get today contest meta data
-func (h *Handlers) GetContestMeta(c *gin.Context) {
+// FindContestMeta : get today contest meta data
+func (h *Handlers) FindContestMeta(c *gin.Context) {
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
 	c.Header("Content-Type", "application/json; charset=utf-8")
 	m, err := r.GetMeta(true)
