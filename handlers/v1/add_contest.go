@@ -11,6 +11,7 @@ import (
 	"gitlab.com/mt-api/wingo/request"
 )
 
+// AddMetaContest : Add meta data of contest
 func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 	var m request.AddMetaRequest
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
@@ -35,6 +36,7 @@ func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 	c.JSON(http.StatusOK, mapMetaModelToResponse(meta))
 }
 
+// AttachQuestion : Add question and answer to the contest meta data
 func (h *V1Handlers) AttachQuestion(c *gin.Context) {
 	var m request.AttachQuestion
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
