@@ -63,7 +63,7 @@ func (cn *Connections) AddContest(m *model.Contest) error {
 
 // GetUserInfo : get user info by id
 func (cn *Connections) GetUserInfo(id string) (*model.UserInfo, error) {
-	r := user.UserGetRepository{}
+	r := user.GetRepository{}
 	c := CacheAdapter{Connection: cn.Redis}
 	u := c.GetUserInfo(id)
 	if u == nil {
@@ -81,7 +81,7 @@ func (cn *Connections) GetUserInfo(id string) (*model.UserInfo, error) {
 
 // AddUserInfo : add user info to the database
 func (cn *Connections) AddUserInfo(u *model.UserInfo) error {
-	r := user.UserSaveRepository{}
+	r := user.SaveRepository{}
 	err := r.SaveUserInfo(u, cn.DB)
 	if err != nil {
 		c := CacheAdapter{Connection: cn.Redis}

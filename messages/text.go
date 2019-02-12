@@ -5,7 +5,7 @@ const (
 	InvalidContestTime = "We have a contest in this range. ID: %v"
 
 	// GeneralDBError : global database error
-	GeneralDBError = "Error while working with database: %v: %s"
+	GeneralDBError = "Error while working with database: %v"
 
 	// MappingError : error while mapping objects
 	MappingError = "error in map %s to %s: %v"

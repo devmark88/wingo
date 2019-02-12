@@ -23,7 +23,6 @@ func (c *CacheAdapter) GetUserInfo(id string) *model.UserInfo {
 	var u model.UserInfo
 	b, e := c.Connection.Get(i).Bytes()
 	if e != nil {
-		logger.Error(fmt.Errorf("error while getting user info from redis UID:%s => %v", id, e))
 		return nil
 	}
 	json.Unmarshal(b, &u)
