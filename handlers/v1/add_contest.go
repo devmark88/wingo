@@ -12,7 +12,7 @@ import (
 )
 
 // AddMetaContest : Add meta data of contest
-func (h *V1Handlers) AddMetaContest(c *gin.Context) {
+func (h *Handlers) AddMetaContest(c *gin.Context) {
 	var m request.AddMetaRequest
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
 	c.Header("Content-Type", "application/json; charset=utf-8")
@@ -37,7 +37,7 @@ func (h *V1Handlers) AddMetaContest(c *gin.Context) {
 }
 
 // AttachQuestion : Add question and answer to the contest meta data
-func (h *V1Handlers) AttachQuestion(c *gin.Context) {
+func (h *Handlers) AttachQuestion(c *gin.Context) {
 	var m request.AttachQuestion
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
 	c.Header("Content-Type", "application/json; charset=utf-8")
