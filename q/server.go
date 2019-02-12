@@ -7,6 +7,7 @@ import (
 	"github.com/RichardKnop/machinery/v1/config"
 )
 
+// Start : Start Queue server with workers
 func Start(n int) (*machinery.Server, *[]machinery.Worker, error) {
 	if n == 0 {
 		n = 1

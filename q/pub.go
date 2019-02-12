@@ -11,10 +11,12 @@ import (
 	"gitlab.com/mt-api/wingo/response"
 )
 
+// Pub : Publish queue server
 type Pub struct {
 	Server *machinery.Server
 }
 
+// PublishQuestion : Send Delayed job task
 func (s *Pub) PublishQuestion(topic string, delay int, res response.QuestionPayload) error {
 	var args []tasks.Arg
 	topicArg := &tasks.Arg{
@@ -22,6 +24,7 @@ func (s *Pub) PublishQuestion(topic string, delay int, res response.QuestionPayl
 		Type:  "string",
 		Value: topic,
 	}
+	res.Type = response.QuestionPayloadEnum
 	ps, _ := json.Marshal(res)
 
 	payloadArg := &tasks.Arg{

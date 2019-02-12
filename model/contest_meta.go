@@ -1,10 +1,10 @@
 package model
 
 import (
-	"encoding/json"
 	"time"
 )
 
+// ContestMeta : ContestMetaModel
 type ContestMeta struct {
 	Base
 	AppID                      string
@@ -16,8 +16,4 @@ type ContestMeta struct {
 	AllowedCorrectorUsageTimes uint8
 	AllowCorrectTilQuestion    uint8
 	NeededTickets              uint8
-}
-
-func (c ContestMeta) MarshalBinary() ([]byte, error) {
-	return json.Marshal(c)
 }

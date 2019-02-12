@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"fmt"
 	"io/ioutil"
+	"os"
 
 	"gitlab.com/mt-api/wingo/q"
 
@@ -41,7 +43,7 @@ func Start(r *gin.Engine, cn *connectors.Connections) {
 
 	handlers.Setup(r, &ctx)
 	p := viper.Get("server.address").(string)
-	logger.Debug("server running on " + p)
+	logger.Debug(fmt.Sprintf("server running on %s, PID: %v", p, os.Getpid()))
 
 	srv, wrk, err := q.Start(1)
 	if err != nil {

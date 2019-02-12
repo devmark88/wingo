@@ -9,15 +9,18 @@ import (
 	"gitlab.com/mt-api/wingo/model"
 )
 
-type UserGetRepository struct{}
+// GetRepository : repository for getter user
+type GetRepository struct{}
 
-func (r *UserGetRepository) GetUserInfo(u string, db *gorm.DB) (error, *model.UserInfo) {
+// GetUserInfo : Get user info from database
+func (r *GetRepository) GetUserInfo(u string, db *gorm.DB) (*model.UserInfo, error) {
 	var d model.UserInfo
+	fmt.Println(u)
 	if result := db.Where("id=?", u).Find(&d); result.Error != nil {
-		return fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, result.GetErrors())), nil
+		return nil, fmt.Errorf(fmt.Sprintf(messages.GeneralDBError, result.GetErrors()))
 	}
 	if len(d.ID) == 0 {
-		return fmt.Errorf(messages.NOT_FOUND, "user", "ID", u), nil
+		return nil, fmt.Errorf(messages.ObjectNotFound, "user", "ID", u)
 	}
-	return nil, &d
+	return &d, nil
 }

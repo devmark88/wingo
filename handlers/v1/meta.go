@@ -17,10 +17,11 @@ import (
 	"gitlab.com/mt-api/wingo/repository"
 )
 
-func (h *V1Handlers) GetContestMeta(c *gin.Context) {
+// FindContestMeta : get today contest meta data
+func (h *Handlers) FindContestMeta(c *gin.Context) {
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
 	c.Header("Content-Type", "application/json; charset=utf-8")
-	err, m := r.GetMeta(true)
+	m, err := r.GetMeta(true)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":  err.Error(),
@@ -28,7 +29,7 @@ func (h *V1Handlers) GetContestMeta(c *gin.Context) {
 		})
 		return
 	}
-	err, u := r.GetUserInfo(h.Context.AuthUser.ID)
+	u, err := r.GetUserInfo(h.Context.AuthUser.ID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":  err.Error(),
@@ -88,7 +89,12 @@ func generateTimelineResponse(m []model.ContestMeta) []response.Timeline {
 		tl = append(tl, t)
 	}
 	if idx != -1 {
-		tl[idx+1].IsCurrent = true
+		// We only have one contest meta in the result
+		if len(tl) == 1 {
+			tl[0].IsCurrent = false
+		} else {
+			tl[idx+1].IsCurrent = true
+		}
 	} else {
 		tl[0].IsCurrent = true
 	}

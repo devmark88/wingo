@@ -11,12 +11,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Broker : Send messages to the broker
 type Broker struct {
 	Client *http.Client
 }
 
-const PUBLISH_ENDPOINT = "/api/v3/mqtt/publish"
+const pulishEndpoint = "/api/v3/mqtt/publish"
 
+// DelayPublish : send delayed message with $delayed tag
 func (b Broker) DelayPublish(t string, d int, payload interface{}) (*http.Response, error) {
 	dtn := fmt.Sprintf("$delayed/%v/%s", d, t)
 	logger.Debug("EMQ: delayed topic => " + dtn)
@@ -26,7 +28,7 @@ func (b Broker) DelayPublish(t string, d int, payload interface{}) (*http.Respon
 	}
 	m := PublishModel{Topic: dtn, ClientID: "test_client_id", Payload: string(p), QOS: 1, Retain: false}
 
-	pe := fmt.Sprintf("%s%s", viper.GetString("emq.base"), PUBLISH_ENDPOINT)
+	pe := fmt.Sprintf("%s%s", viper.GetString("emq.base"), pulishEndpoint)
 	bytesRepresentation, err := json.Marshal(m)
 	if err != nil {
 		return nil, fmt.Errorf("EMQ:PUBLISH => error while parsing publish model: %v", err)
@@ -35,11 +37,12 @@ func (b Broker) DelayPublish(t string, d int, payload interface{}) (*http.Respon
 	req.SetBasicAuth(viper.GetString("emq.auth.username"), viper.GetString("emq.auth.password"))
 	return b.Client.Do(req)
 }
-func (b Broker) Publish(t string, payload string) (*http.Response, error) {
-	// TODO: Replace test with t
-	m := PublishModel{Topic: "test", ClientID: "test_client_id", Payload: payload, QOS: 1, Retain: false}
 
-	pe := fmt.Sprintf("%s%s", viper.GetString("emq.base"), PUBLISH_ENDPOINT)
+// Publish : Publish message to the emq by HTTP endpoint
+func (b Broker) Publish(t string, payload string) (*http.Response, error) {
+	m := PublishModel{Topic: t, ClientID: "test_client_id", Payload: payload, QOS: 1, Retain: false}
+
+	pe := fmt.Sprintf("%s%s", viper.GetString("emq.base"), pulishEndpoint)
 	bytesRepresentation, err := json.Marshal(m)
 	logger.Debug(string(bytesRepresentation))
 	if err != nil {

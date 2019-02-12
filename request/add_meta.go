@@ -6,6 +6,7 @@ import (
 	"gitlab.com/mt-api/wingo/model"
 )
 
+// AddMetaRequest : request model for add meta request
 type AddMetaRequest struct {
 	AppID                      string    `json:"app" xml:"app" binding:"required"`
 	Title                      string    `json:"title" xml:"title" binding:"required"`
@@ -18,6 +19,7 @@ type AddMetaRequest struct {
 	NeededTickets              uint8     `json:"incomingCost" xml:"incomingCost" binding:"required"`
 }
 
+// ToModel : map requests dto to the model
 func (r *AddMetaRequest) ToModel() *model.ContestMeta {
 	m := model.ContestMeta{}
 	m.AppID = r.AppID

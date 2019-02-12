@@ -9,6 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// LogLevel : debug, info, trace, error, fatal
 var LogLevel string
 
 func init() {
@@ -74,13 +75,14 @@ func Fatal(l interface{}) {
 	}).Fatalln(l)
 }
 
+//CheckOrFatal => If err is not nil make it Fatal
 func CheckOrFatal(e error) {
 	if e != nil {
 		Fatal(e)
 	}
 }
 
-// LogWriter log writer interface
+// DebugWriter log writer interface
 type DebugWriter interface {
 	Debug(v ...interface{})
 }
@@ -92,5 +94,5 @@ type Logger struct {
 
 // Print format & print log
 func (logger Logger) Print(values ...interface{}) {
-	Debug(values)
+	Debug(values...)
 }

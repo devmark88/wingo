@@ -1,9 +1,18 @@
 package messages
 
 const (
-	INVALID_CONTEST_TIME = "We have a contest in this range. ID: %v"
-	GENERAL_DB_ERROR     = "Error while working with database: %v"
-	MAPPING_ERROR        = "error in map %s to %s: %v"
-	META_HAS_CONTEST     = "a contest already added to this meta. contestID: %v"
-	NOT_FOUND            = "%s not found with %s:%v"
+	// InvalidContestTime : contest time is not valid
+	InvalidContestTime = "We have a contest in this range. ID: %v"
+
+	// GeneralDBError : global database error
+	GeneralDBError = "Error while working with database: %v"
+
+	// MappingError : error while mapping objects
+	MappingError = "error in map %s to %s: %v"
+
+	// MetaHasContest : contest has question
+	MetaHasContest = "a contest already added to this meta. contestID: %v"
+
+	// ObjectNotFound : an object not found
+	ObjectNotFound = "%s not found with %s:%v"
 )

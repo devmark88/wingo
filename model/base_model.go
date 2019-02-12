@@ -5,6 +5,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
+// Base : Base of all models
 type Base struct {
 	gorm.Model
 }

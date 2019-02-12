@@ -40,7 +40,7 @@ const (
 
 //Setup => Setup application handlers
 func Setup(r *gin.Engine, appCtx *context.AppContext) {
-	vh := m.V1Handlers{Context: appCtx}
+	vh := m.Handlers{Context: appCtx}
 	v1 := r.Group("/v1")
 
 	// Define Groups
@@ -56,5 +56,6 @@ func Setup(r *gin.Engine, appCtx *context.AppContext) {
 	admin.POST("contest/question", vh.AttachQuestion)
 
 	// contest routes
-	contest.GET("meta", vh.GetContestMeta)
+	contest.GET("meta", vh.FindContestMeta)
+	contest.POST("answer", vh.PostAnswer)
 }

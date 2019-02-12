@@ -44,9 +44,9 @@ func migrate(db *gorm.DB) {
 	db.Model(&model.Contest{}).AddForeignKey("contest_meta_id", "contest_meta(id)", "RESTRICT", "RESTRICT")
 }
 func setLogger(db *gorm.DB) {
-	l := false
+	l := true
 	if logger.LogLevel == "trace" || logger.LogLevel == "debug" {
-		l = false
+		l = true
 	}
 	db.LogMode(l)
 }
