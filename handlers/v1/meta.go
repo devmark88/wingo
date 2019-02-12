@@ -89,7 +89,12 @@ func generateTimelineResponse(m []model.ContestMeta) []response.Timeline {
 		tl = append(tl, t)
 	}
 	if idx != -1 {
-		tl[idx+1].IsCurrent = true
+		// We only have one contest meta in the result
+		if len(tl) == 1 {
+			tl[0].IsCurrent = false
+		} else {
+			tl[idx+1].IsCurrent = true
+		}
 	} else {
 		tl[0].IsCurrent = true
 	}
