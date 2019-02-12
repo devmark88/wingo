@@ -13,7 +13,7 @@ type UserSaveRepository struct{}
 
 func (r *UserSaveRepository) SaveUserInfo(u *model.UserInfo, db *gorm.DB) error {
 	if result := db.Where(model.UserInfo{ID: u.ID}).Attrs(model.UserInfo{Correctors: u.Correctors, Tickets: u.Tickets}).FirstOrCreate(u); result.Error != nil {
-		return fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, result.GetErrors()))
+		return fmt.Errorf(fmt.Sprintf(messages.GeneralDBError, result.GetErrors()))
 	}
 	return nil
 }

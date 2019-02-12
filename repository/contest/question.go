@@ -22,7 +22,7 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *mac
 	x := model.Contest{}
 	db.Table("contests").Where("contest_meta_id = ?", m.ContestMetaID).Find(&x)
 	if x.ID > 0 {
-		return fmt.Errorf(fmt.Sprintf(messages.META_HAS_CONTEST, x.ID))
+		return fmt.Errorf(fmt.Sprintf(messages.MetaHasContest, x.ID))
 	}
 	tx := db.Begin()
 	ct := model.Contest{
@@ -31,7 +31,7 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *mac
 	}
 	if result := db.Create(&ct); result.Error != nil {
 		tx.Rollback()
-		return fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, result.GetErrors()))
+		return fmt.Errorf(fmt.Sprintf(messages.GeneralDBError, result.GetErrors()))
 	}
 	for _, q := range m.Questions {
 		question := model.Question{
@@ -43,7 +43,7 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *mac
 		}
 		if result := db.Create(&question); result.Error != nil {
 			tx.Rollback()
-			return fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, result.GetErrors()))
+			return fmt.Errorf(fmt.Sprintf(messages.GeneralDBError, result.GetErrors()))
 		}
 	}
 	var meta model.ContestMeta
@@ -60,7 +60,7 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *mac
 	}
 	if result := tx.Commit(); result.Error != nil {
 		tx.Rollback()
-		return fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, result.GetErrors()))
+		return fmt.Errorf(fmt.Sprintf(messages.GeneralDBError, result.GetErrors()))
 	}
 	return nil
 }

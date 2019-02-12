@@ -25,11 +25,11 @@ func (r *MetaRepository) SaveMeta(m *model.ContestMeta, db *gorm.DB) error {
 	var contest model.ContestMeta
 	db.Where("begin_time BETWEEN ? AND ?", s, e).First(&contest)
 	if contest.ID > 0 {
-		return fmt.Errorf(fmt.Sprintf(messages.INVALID_CONTEST_TIME, contest.ID))
+		return fmt.Errorf(fmt.Sprintf(messages.InvalidContestTime, contest.ID))
 	}
 
 	if result := db.Create(m); result.Error != nil {
-		return fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, result.GetErrors()))
+		return fmt.Errorf(fmt.Sprintf(messages.GeneralDBError, result.GetErrors()))
 	}
 	return nil
 }
@@ -52,7 +52,7 @@ func (r *MetaRepository) GetTodayMeta(db *gorm.DB, force bool, limit int) (*[]mo
 		}
 	}
 	if db.Error != nil {
-		return nil, fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, db.GetErrors()))
+		return nil, fmt.Errorf(fmt.Sprintf(messages.GeneralDBError, db.GetErrors()))
 	}
 	return &d, nil
 }

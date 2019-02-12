@@ -16,10 +16,10 @@ type UserGetRepository struct{}
 func (r *UserGetRepository) GetUserInfo(u string, db *gorm.DB) (*model.UserInfo, error) {
 	var d model.UserInfo
 	if result := db.Where("id=?", u).Find(&d); result.Error != nil {
-		return nil, fmt.Errorf(fmt.Sprintf(messages.GENERAL_DB_ERROR, result.GetErrors()))
+		return nil, fmt.Errorf(fmt.Sprintf(messages.GeneralDBError, result.GetErrors()))
 	}
 	if len(d.ID) == 0 {
-		return nil, fmt.Errorf(messages.NOT_FOUND, "user", "ID", u)
+		return nil, fmt.Errorf(messages.ObjectNotFound, "user", "ID", u)
 	}
 	return &d, nil
 }

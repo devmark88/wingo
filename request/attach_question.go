@@ -49,7 +49,7 @@ func (a *AttachQuestion) ToModel() (*model.Contest, error) {
 		mq.Order = q.Order
 		b, err := json.Marshal(q.Options)
 		if err != nil {
-			return nil, fmt.Errorf(fmt.Sprintf(messages.MAPPING_ERROR, "request.AttachQuestion", "model.Contest", err))
+			return nil, fmt.Errorf(fmt.Sprintf(messages.MappingError, "request.AttachQuestion", "model.Contest", err))
 		}
 		mq.Answers = string(b)
 		m.Questions = append(m.Questions, *mq)
