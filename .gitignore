@@ -16,3 +16,4 @@ config.yaml
 secrets/*.pem
 .idea/
 gin-bin
+.DS_Store
