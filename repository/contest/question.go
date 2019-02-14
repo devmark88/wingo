@@ -71,6 +71,5 @@ func (r *QuestionRepository) GetQuestionByID(id uint, db *gorm.DB) (*model.Quest
 	if result := db.Where("id = ?", id).First(&q); result.Error != nil {
 		return nil, fmt.Errorf(fmt.Sprintf(messages.ObjectNotFound, "qeustion", "id", id))
 	}
-
 	return &q, nil
 }
