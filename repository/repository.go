@@ -110,3 +110,21 @@ func (cn *Connections) GetContest(id uint) (*model.Contest, error) {
 	}
 	return u, nil
 }
+
+//GetUserTracks : Get all tracks
+func (cn *Connections) GetUserTracks(uID string, cID uint) {
+	c := CacheAdapter{Connection: cn.Redis}
+	r := contest.Contest{}
+
+	u := c.GetUserTrack(cID, uID)
+	if u == nil {
+		u, err := r.GetContest(id, cn.DB)
+		if err == nil {
+			er := c.SetContest(*u)
+			if er != nil {
+				logger.Error(fmt.Errorf("error while saving contest into redis user:%v => err: %v", u, er))
+			}
+		}
+		return u, err
+	}
+}
