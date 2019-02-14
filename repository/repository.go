@@ -35,13 +35,13 @@ func (cn *Connections) AddMeta(m *model.ContestMeta) error {
 	return err
 }
 
-// GetMeta : Get meta data of today
+// GetTodaysContestMeta : Get meta data of today
 // it get data from cache if can found any otherwise it get data from database
 // and put it to the cache
-func (cn *Connections) GetMeta(force bool) (*[]model.ContestMeta, error) {
+func (cn *Connections) GetTodaysContestMeta(force bool) (*[]model.ContestMeta, error) {
 	r := contest.MetaRepository{}
 	c := CacheAdapter{Connection: cn.Redis}
-	t := c.GetContestMeta()
+	t := c.GetTodayContestsMeta()
 	if t == nil {
 		t, err := r.GetTodayMeta(cn.DB, force, 3)
 		if err == nil {
@@ -91,4 +91,22 @@ func (cn *Connections) AddUserInfo(u *model.UserInfo) error {
 		}
 	}
 	return err
+}
+
+//GetContest : Get contest from database of cache server
+func (cn *Connections) GetContest(id uint) (*model.Contest, error) {
+	r := contest.Contest{}
+	c := CacheAdapter{Connection: cn.Redis}
+	u := c.GetContest(id)
+	if u == nil {
+		u, err := r.GetContest(id, cn.DB)
+		if err == nil {
+			er := c.SetContest(*u)
+			if er != nil {
+				logger.Error(fmt.Errorf("error while saving contest into redis user:%v => err: %v", u, er))
+			}
+		}
+		return u, err
+	}
+	return u, nil
 }
