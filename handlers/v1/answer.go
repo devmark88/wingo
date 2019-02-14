@@ -3,6 +3,8 @@ package v1
 import (
 	"net/http"
 
+	"gitlab.com/mt-api/wingo/model"
+
 	"github.com/gin-gonic/gin"
 	"gitlab.com/mt-api/wingo/repository"
 	"gitlab.com/mt-api/wingo/request"
@@ -21,7 +23,7 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 		})
 		return
 	}
-	// uid := h.Context.AuthUser.ID
+	uid := h.Context.AuthUser.ID
 
 	contest, err := r.GetContest(m.ContestID)
 	if err != nil {
@@ -31,11 +33,21 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 		})
 		return
 	}
-	if contest.IsPast() || contest.IsQuestionInTime(m.QuestionID) {
+	if contest.IsPast() || !contest.IsQuestionInTime(m.QuestionID) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":  err.Error(),
 			"status": http.StatusPreconditionFailed,
 		})
 		return
 	}
+	qidx := contest.GetQuestionIndex(m.QuestionID)
+	var track model.UserTrack
+	track.UserID = uid
+	if qidx == 0 {
+		// it is the first question
+	} else {
+
+	}
+	
+	
 }
