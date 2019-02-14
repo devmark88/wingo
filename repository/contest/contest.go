@@ -33,3 +33,16 @@ func (c *Contest) GetContestByMeta(metaID uint, db *gorm.DB) (*model.Contest, er
 	}
 	return &contest, nil
 }
+
+// GetContestOfQuestion : get contest by question id
+func (c *Contest) GetContestOfQuestion(id uint, db *gorm.DB) (*model.Contest, error) {
+	var contest model.Contest
+	var question model.Question
+	if qResult := db.Where("id = ?", id).First(&question); qResult.Error != nil {
+		return nil, fmt.Errorf(fmt.Sprintf(messages.ObjectNotFound, "question", "id", id))
+	}
+	if cResult := db.Where("id = ?", question.ContestID).First(&contest); cResult.Error != nil {
+		return nil, fmt.Errorf(fmt.Sprintf(messages.ObjectNotFound, "contest", "id", question.ContestID))
+	}
+	return &contest, nil
+}
