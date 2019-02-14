@@ -12,6 +12,7 @@ import (
 func (h *Handlers) PostAnswer(c *gin.Context) {
 	var m request.PostAnswer
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
+	
 	c.Header("Content-Type", "application/json; charset=utf-8")
 	if err := c.Bind(&m); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
