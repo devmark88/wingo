@@ -23,6 +23,7 @@ redis:
     idle: "5m"
 app:
   answer_delay: 15
+  answer_threshould: 5
   next_contest:
     default_hour: "9"
     default_min: "30"
