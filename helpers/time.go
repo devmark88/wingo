@@ -35,6 +35,19 @@ func IsPast(t time.Time) bool {
 	return n.Sub(d) > 0
 }
 
+// DateWithinRange : check wheter t is in the range
+// Convert input to GMT + 3:30
+func DateWithinRange(t time.Time, min time.Time, max time.Time) bool {
+	min = TimeInTehran(min)
+	max = TimeInTehran(max)
+	t = TimeInTehran(t)
+
+	if t.Before(max) && t.After(min) {
+		return true
+	}
+	return false
+}
+
 // IsFuture : check wheter input time is past
 // Convert input time to GMT + 3:30
 func IsFuture(t time.Time) bool {
