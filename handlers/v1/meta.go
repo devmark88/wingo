@@ -21,7 +21,7 @@ import (
 func (h *Handlers) FindContestMeta(c *gin.Context) {
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
 	c.Header("Content-Type", "application/json; charset=utf-8")
-	m, err := r.GetMeta(true)
+	m, err := r.GetTodaysContestMeta(true)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":  err.Error(),
