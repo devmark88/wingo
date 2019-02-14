@@ -81,7 +81,7 @@ func (c *CacheAdapter) InvalidateContestMeta() error {
 
 // GetUserTrack : get user track from redis
 // with key user:{{userID}}:contest:{{contestID}}:track
-func (c *CacheAdapter) GetUserTrack(cid int, uid string) *[]model.UserTrack {
+func (c *CacheAdapter) GetUserTrack(cid uint, uid string) *[]model.UserTrack {
 	k := fmt.Sprintf("user:%s:contest:%v:track", uid, cid)
 	var cm []model.UserTrack
 	b, e := c.Connection.Get(k).Bytes()
@@ -93,6 +93,7 @@ func (c *CacheAdapter) GetUserTrack(cid int, uid string) *[]model.UserTrack {
 }
 
 // SetUserTrack : add new item to user track
+// with key user:{{userID}}:contest:{{contestID}}:track
 func (c *CacheAdapter) SetUserTrack(v *model.UserTrack) error {
 	k := fmt.Sprintf("user:%s:contest:%v:track", v.UserID, v.ContestID)
 	serialized, err := json.Marshal(v)
