@@ -21,6 +21,21 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 		})
 		return
 	}
-	uid := h.Context.AuthUser.ID
+	// uid := h.Context.AuthUser.ID
 
+	contest, err := r.GetContest(m.ContestID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":  err.Error(),
+			"status": http.StatusBadRequest,
+		})
+		return
+	}
+	if contest.IsPast() || contest.IsQuestionInTime(m.QuestionID) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":  err.Error(),
+			"status": http.StatusPreconditionFailed,
+		})
+		return
+	}
 }
