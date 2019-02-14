@@ -21,7 +21,12 @@ func (c *Contest) GetContest(id uint, db *gorm.DB) (*model.Contest, error) {
 	if result := db.Where("id = ?", contest.ContestMetaID).First(&meta); result.Error != nil {
 		return nil, fmt.Errorf(fmt.Sprintf(messages.ObjectNotFound, "contest meta", "id", id))
 	}
+	var questions []model.Question
+	if result := db.Where("contest_id = ?", contest.ID).Find(&questions); result.Error != nil {
+		return nil, fmt.Errorf(fmt.Sprintf(messages.ObjectNotFound, "questions", "contestID", id))
+	}
 	contest.Meta = meta
+	contest.Questions = questions
 	return &contest, nil
 }
 
