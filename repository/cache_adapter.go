@@ -105,6 +105,23 @@ func (c *CacheAdapter) SetUserTrack(v *model.UserTrack) error {
 	return c.Connection.HMSet(k, val).Err()
 }
 
+// SetUserTracks : replace user tracks if exists otherwise add it
+// with key user:{{userID}}:contest:{{contestID}}:track
+func (c *CacheAdapter) SetUserTracks(v *[]model.UserTrack) error {
+	val := make(map[string]interface{})
+	for _, q := range *v {
+		k := fmt.Sprintf("user:%s:contest:%v:track", q.UserID, q.ContestID)
+		serialized, err := json.Marshal(q)
+		if err != nil {
+			return fmt.Errorf("error in marshal to json: %v", err)
+		}
+		val[fmt.Sprintf("%v", q.QuestionIndex)] = serialized
+		err = c.Connection.HMSet(k, val).Err()
+	}
+	
+	return nil
+}
+
 // GetContestMetabyID : get contest meta by id
 // with key contest:meta:{{id}}
 func (c *CacheAdapter) GetContestMetabyID(id uint) *model.ContestMeta {
