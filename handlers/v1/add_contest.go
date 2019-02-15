@@ -36,7 +36,6 @@ func (h *Handlers) AddMetaContest(c *gin.Context) {
 	c.JSON(http.StatusOK, mapMetaModelToResponse(meta))
 }
 
-// AttachQuestion : Add question and answer to the contest meta data
 func (h *Handlers) AttachQuestion(c *gin.Context) {
 	var m request.AttachQuestion
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}

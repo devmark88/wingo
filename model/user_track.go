@@ -10,10 +10,11 @@ type UserTrack struct {
 	ContestID             uint
 	UserID                string
 	QuestionID            uint
-	QuestionIndex         uint
+	QuestionIndex         int
 	CanPlay               bool
 	CanUseCorrector       bool
-	IsSelectCorrectAnswer sql.NullBool
+	IsSelectCorrectAnswer bool
+	CorrectorUsageTimes   int
 	State                 TrackStateEnum
 	BeforeTickets         uint
 	BeforeCorrectors      uint

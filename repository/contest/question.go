@@ -64,3 +64,12 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *mac
 	}
 	return nil
 }
+
+//GetQuestionByID : get question by id
+func (r *QuestionRepository) GetQuestionByID(id uint, db *gorm.DB) (*model.Question, error) {
+	var q model.Question
+	if result := db.Where("id = ?", id).First(&q); result.Error != nil {
+		return nil, fmt.Errorf(fmt.Sprintf(messages.ObjectNotFound, "qeustion", "id", id))
+	}
+	return &q, nil
+}

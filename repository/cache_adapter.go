@@ -48,9 +48,9 @@ func (c *CacheAdapter) InvalidateUserInfo(id string) error {
 	return c.Connection.Del(fmt.Sprintf("user:%s", id)).Err()
 }
 
-// GetContestMeta : get contest meta from cache
+// GetTodayContestsMeta : get contest meta from cache
 // with key meta:contest:{{year}}-{{month}}-{{day}}
-func (c *CacheAdapter) GetContestMeta() *[]model.ContestMeta {
+func (c *CacheAdapter) GetTodayContestsMeta() *[]model.ContestMeta {
 	k := fmt.Sprintf("meta:contest:%s", getDateForKey(time.Now()))
 	var cm []model.ContestMeta
 	b, e := c.Connection.Get(k).Bytes()
@@ -81,7 +81,7 @@ func (c *CacheAdapter) InvalidateContestMeta() error {
 
 // GetUserTrack : get user track from redis
 // with key user:{{userID}}:contest:{{contestID}}:track
-func (c *CacheAdapter) GetUserTrack(cid int, uid string) *[]model.UserTrack {
+func (c *CacheAdapter) GetUserTrack(cid uint, uid string) *[]model.UserTrack {
 	k := fmt.Sprintf("user:%s:contest:%v:track", uid, cid)
 	var cm []model.UserTrack
 	b, e := c.Connection.Get(k).Bytes()
@@ -103,6 +103,85 @@ func (c *CacheAdapter) SetUserTrack(v *model.UserTrack) error {
 	val := make(map[string]interface{})
 	val[fmt.Sprintf("%v", v.QuestionIndex)] = serialized
 	return c.Connection.HMSet(k, val).Err()
+}
+
+// SetUserTracks : replace user tracks if exists otherwise add it
+// with key user:{{userID}}:contest:{{contestID}}:track
+func (c *CacheAdapter) SetUserTracks(v *[]model.UserTrack) error {
+	val := make(map[string]interface{})
+	for _, q := range *v {
+		k := fmt.Sprintf("user:%s:contest:%v:track", q.UserID, q.ContestID)
+		serialized, err := json.Marshal(q)
+		if err != nil {
+			return fmt.Errorf("error in marshal to json: %v", err)
+		}
+		val[fmt.Sprintf("%v", q.QuestionIndex)] = serialized
+		err = c.Connection.HMSet(k, val).Err()
+	}
+	
+	return nil
+}
+
+// GetContestMetabyID : get contest meta by id
+// with key contest:meta:{{id}}
+func (c *CacheAdapter) GetContestMetabyID(id uint) *model.ContestMeta {
+	var ct model.ContestMeta
+	k := fmt.Sprintf("contest:meta:%v", id)
+	b, e := c.Connection.Get(k).Bytes()
+	if e != nil {
+		return nil
+	}
+	json.Unmarshal(b, &ct)
+	return &ct
+}
+
+// InvalidateContestMetaByID : invalidate contest meta cache by id
+// with key contest:meta:{{id}}
+func (c *CacheAdapter) InvalidateContestMetaByID(id uint) error {
+	key := fmt.Sprintf("contest:meta:%v", id)
+	return c.Connection.Del(key).Err()
+}
+
+// SetContestMetabyID : get contest by id
+// with key contest:meta:{{id}}
+func (c *CacheAdapter) SetContestMetabyID(v model.ContestMeta) error {
+	k := fmt.Sprintf("contest:meta:%v", v.ID)
+	serialized, err := json.Marshal(v)
+	if err != nil {
+		return fmt.Errorf("error in marshal to json: %v", err)
+	}
+	return c.Connection.Set(k, serialized, 0).Err()
+}
+
+// GetContest : get contest by id
+// get contest by id with key contest:{{id}}
+func (c *CacheAdapter) GetContest(id uint) *model.Contest {
+	var ct model.Contest
+	k := fmt.Sprintf("contest:%v", id)
+	b, e := c.Connection.Get(k).Bytes()
+	if e != nil {
+		return nil
+	}
+	json.Unmarshal(b, &ct)
+	return &ct
+}
+
+// SetContest : get contest by id
+// with key contest:{{id}}
+func (c *CacheAdapter) SetContest(v model.Contest) error {
+	k := fmt.Sprintf("contest:%v", v.ID)
+	serialized, err := json.Marshal(v)
+	if err != nil {
+		return fmt.Errorf("error in marshal to json: %v", err)
+	}
+	return c.Connection.Set(k, serialized, 0).Err()
+}
+
+// InvalidateContest : invalidate contest cache by id
+// with key contest:{{id}}
+func (c *CacheAdapter) InvalidateContest(id uint) error {
+	key := fmt.Sprintf("contest:%v", id)
+	return c.Connection.Del(key).Err()
 }
 
 func getDateForKey(t time.Time) string {

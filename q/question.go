@@ -43,6 +43,7 @@ func (q Question) PublishAll(c model.Contest, srv *machinery.Server) error {
 		p.Body = q.Body
 		p.Index = idx
 		p.Options = q.Answers
+		p.ContestID = c.ID
 		delay := 0
 		if idx == 0 {
 			delay = int(d)
