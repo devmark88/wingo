@@ -103,8 +103,25 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 			})
 			return
 		}
-		latestTrack := tracks[len(tracks)-1]
+		cl := *tracks
+		lst := cl[len(cl)-1]
+		if lst.QuestionIndex+1 != qidx || lst.CanPlay == false {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error":  err.Error(),
+				"status": http.StatusPreconditionFailed,
+			})
+			return
+		}
+		if m.SelectedIndex == correctAnswer {
+			track.CanPlay = true
+			track.IsSelectCorrectAnswer = true
+			track.State = model.PostAnswer
+			if qidx == len(contest.Questions)-1 {
+				track.State = model.WinTheGame
+			}
+		} else {
 
+		}
 	}
 
 }
