@@ -3,6 +3,8 @@ package repository
 import (
 	"fmt"
 
+	"gitlab.com/mt-api/wingo/messages"
+
 	"github.com/RichardKnop/machinery/v1"
 
 	"github.com/go-redis/redis"
@@ -132,12 +134,20 @@ func (cn *Connections) GetUserTracks(uID string, cID uint) (*[]model.UserTrack, 
 
 // SaveUserTrackAsync : add new track for specific contest asynchronously
 func (cn *Connections) SaveUserTrackAsync(u *model.UserTrack) error {
+	ch := make(chan error)
 	r := user.TrackRepository{}
-	go r.SaveUserTracks(u, cn.DB)
+	go func() {
+		err := r.SaveUserTracks(u, cn.DB)
+		ch <- err
+	}()
+	errMsg := <-ch
+	if errMsg != nil {
+		logger.Error(fmt.Sprintf(messages.ErrorInAddUserTrackToDatabase, errMsg))
+	}
 	c := CacheAdapter{Connection: cn.Redis}
 	e := c.SetUserTrack(u)
 	if e != nil {
-		logger.Error(fmt.Errorf("error while invalidating user info cache: %v", e))
+		logger.Error(fmt.Sprintf(messages.ErrorInAddUserTrackToRedis, e))
 	}
 	return e
 }
