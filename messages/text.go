@@ -21,4 +21,10 @@ const (
 
 	// ErrorInSplitCorrectAnswerIndices : Error while trying to split correct answer indices for question: %v => error : %v
 	ErrorInSplitCorrectAnswerIndices = "Error while trying to split correct answer indices for question: %v => error : %v"
+
+	// ErrorInAddUserTrackToDatabase : Error while adding user track into DB: %v
+	ErrorInAddUserTrackToDatabase = "Error while adding user track into DB: %v"
+
+	// ErrorInAddUserTrackToRedis : Error while adding user track into Redis: %v
+	ErrorInAddUserTrackToRedis = "Error while adding user track into Redis: %v"
 )
