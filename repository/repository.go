@@ -133,14 +133,11 @@ func (cn *Connections) GetUserTracks(uID string, cID uint) (*[]model.UserTrack, 
 // SaveUserTrackAsync : add new track for specific contest asynchronously
 func (cn *Connections) SaveUserTrackAsync(u *model.UserTrack) error {
 	r := user.TrackRepository{}
-
-	err := r.SaveUserTracks(u, cn.DB)
-	if err != nil {
-		c := CacheAdapter{Connection: cn.Redis}
-		e := c.SetUserTrack(u)
-		if e != nil {
-			logger.Error(fmt.Errorf("error while invalidating user info cache: %v", e))
-		}
+	go r.SaveUserTracks(u, cn.DB)
+	c := CacheAdapter{Connection: cn.Redis}
+	e := c.SetUserTrack(u)
+	if e != nil {
+		logger.Error(fmt.Errorf("error while invalidating user info cache: %v", e))
 	}
-	return err
+	return e
 }
