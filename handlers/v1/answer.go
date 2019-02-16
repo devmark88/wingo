@@ -105,7 +105,7 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 			}
 		}
 	}
-	r.SaveUserTrackAsync(&track)
+	go r.SaveUserTrackAsync(&track)
 	c.JSON(http.StatusOK, gin.H{
 		"error": nil,
 		"data":  true,
