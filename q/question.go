@@ -35,7 +35,7 @@ func (q Question) PublishAll(c model.Contest, srv *machinery.Server) error {
 	}
 	itemDuration := int(c.Meta.Duration / uint(len(c.Questions)))
 	answerWaiting := viper.GetInt("app.answer_delay")
-	tpc := fmt.Sprintf("contest%v", c.Meta.ID)
+	tpc := getQuestionTopic(c.Meta.ID)
 
 	for idx, q := range c.Questions {
 		p := response.QuestionPayload{}
