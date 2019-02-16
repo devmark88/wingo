@@ -14,7 +14,7 @@ type UserTrack struct {
 	CanPlay               bool
 	CanUseCorrector       bool
 	IsSelectCorrectAnswer bool
-	CorrectorUsageTimes   int
+	CorrectorUsageTimes   uint
 	State                 TrackStateEnum
 	BeforeTickets         uint
 	BeforeCorrectors      uint

@@ -33,7 +33,7 @@ func (q Question) PublishAll(c model.Contest, srv *machinery.Server) error {
 	if d <= 0 {
 		return fmt.Errorf("begin time is %s, you can not add question to this contest anymore", c.Meta.BeginTime.String())
 	}
-	itemDuration := int(c.Meta.Duration / uint16(len(c.Questions)))
+	itemDuration := int(c.Meta.Duration / uint(len(c.Questions)))
 	answerWaiting := viper.GetInt("app.answer_delay")
 	tpc := fmt.Sprintf("contest%v", c.Meta.ID)
 

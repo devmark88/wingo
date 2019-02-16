@@ -3,8 +3,6 @@ package v1
 import (
 	"net/http"
 
-	"gitlab.com/mt-api/wingo/helpers"
-
 	"gitlab.com/mt-api/wingo/model"
 
 	"github.com/gin-gonic/gin"
@@ -42,7 +40,6 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 		return
 	}
 	qidx := contest.GetQuestionIndex(m.QuestionID)
-	ca, err := helpers.StringToIntArray(contest.CorrectAnswersIndices, ",")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":  err.Error(),
@@ -50,7 +47,6 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 		})
 		return
 	}
-	correctAnswer := ca[qidx]
 	var track model.UserTrack
 	uinfo, err := r.GetUserInfo(uid)
 	if err != nil {
@@ -74,7 +70,7 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 			})
 			return
 		}
-		if m.SelectedIndex == correctAnswer {
+		if contest.IsItCorrectAnswer(m.SelectedIndex, m.QuestionID) {
 			track.CanPlay = true
 			track.CanUseCorrector = true
 			track.IsSelectCorrectAnswer = true
@@ -112,7 +108,7 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 			})
 			return
 		}
-		if m.SelectedIndex == correctAnswer {
+		if contest.IsItCorrectAnswer(m.SelectedIndex, m.QuestionID) {
 			track.CanPlay = true
 			track.IsSelectCorrectAnswer = true
 			track.State = model.PostAnswer

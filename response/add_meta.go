@@ -7,9 +7,9 @@ type AddMeta struct {
 	Title                      string `json:"title"`
 	Prize                      uint   `json:"prize"`
 	BeginTime                  string `json:"beginDateTime"`
-	Duration                   uint16 `json:"duration"`
-	NeededCorrectors           uint8  `json:"corrector"`
-	AllowedCorrectorUsageTimes uint8  `json:"correctorUsageLimit"`
-	AllowCorrectTilQuestion    uint8  `json:"allowCorrectTilQuestion"`
-	NeededTickets              uint8  `json:"incomingCost"`
+	Duration                   uint   `json:"duration"`
+	NeededCorrectors           uint   `json:"corrector"`
+	AllowedCorrectorUsageTimes uint   `json:"correctorUsageLimit"`
+	AllowCorrectTilQuestion    uint   `json:"allowCorrectTilQuestion"`
+	NeededTickets              uint   `json:"incomingCost"`
 }

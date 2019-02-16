@@ -11,9 +11,9 @@ type ContestMeta struct {
 	Title                      string
 	Prize                      uint
 	BeginTime                  time.Time
-	Duration                   uint16
-	NeededCorrectors           uint8
+	Duration                   uint
+	NeededCorrectors           uint
 	AllowedCorrectorUsageTimes uint
-	AllowCorrectTilQuestion    uint8
-	NeededTickets              uint8
+	AllowCorrectTilQuestion    uint
+	NeededTickets              uint
 }
