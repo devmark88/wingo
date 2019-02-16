@@ -73,9 +73,19 @@ func (c *Contest) IsItCorrectAnswer(selectedAnswerIndex int, qID uint) bool {
 }
 
 // CaneYetUserCorrector : can user use correct in particular question
-func (c *Contest) CaneYetUserCorrector(u *UserInfo, ut *UserTrack, qidx uint) bool {
-	if u == nil {
+func (c *Contest) CaneYetUserCorrector(u *UserInfo, ut *UserTrack, qidx int) bool {
+	if ut == nil {
 		return c.Meta.AllowedCorrectorUsageTimes > 0 && u.Correctors >= c.Meta.NeededCorrectors
 	}
-	return ut.CanPlay && c.Meta.AllowedCorrectorUsageTimes > ut.CorrectorUsageTimes && c.Meta.AllowCorrectTilQuestion > qidx
+	return ut.CanPlay && c.Meta.AllowedCorrectorUsageTimes > ut.CorrectorUsageTimes && c.Meta.AllowCorrectTilQuestion-1 > uint(qidx)
+}
+
+// IsItFirstQuestion : is particular question the first question
+func (c *Contest) IsItFirstQuestion(qidx int) bool {
+	return len(c.Questions) > 0 && qidx == 0
+}
+
+// IsItLastQuestion : is particular question the latest question
+func (c *Contest) IsItLastQuestion(qidx int) bool {
+	return qidx == len(c.Questions)-1
 }
