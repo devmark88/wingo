@@ -8,3 +8,6 @@ func getUserTopic(userID string) string {
 func getQuestionTopic(contestID uint) string {
 	return fmt.Sprintf("contest%v", contestID)
 }
+func getDeadlineTopic(contestID uint) string {
+	return fmt.Sprintf("contest%v", contestID)
+}
