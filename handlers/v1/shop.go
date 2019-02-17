@@ -3,6 +3,8 @@ package v1
 import (
 	"net/http"
 
+	"github.com/spf13/viper"
+
 	"github.com/gin-gonic/gin"
 	"gitlab.com/mt-api/wingo/repository"
 	"gitlab.com/mt-api/wingo/request"
@@ -17,25 +19,52 @@ func (h *Handlers) UpdateUserInfo(c *gin.Context) {
 		attachErrorToContext(c, err, http.StatusBadRequest)
 		return
 	}
-	uinfo, err := r.GetUserInfo(h.Context.AuthUser.ID)
+	code, err := updateUserInfo(h.Context.AuthUser.ID, m.Tickets, m.Correctors, &r)
 	if err != nil {
-		attachErrorToContext(c, err, http.StatusBadRequest)
-		return
-	}
-	if m.Tickets > 0 {
-		uinfo.Tickets = m.Tickets
-		uinfo.CanPlay = true
-	}
-	if m.Correctors > 0 {
-		uinfo.Correctors = m.Correctors
-	}
-	err = r.AddUserInfo(uinfo)
-	if err != nil {
-		attachErrorToContext(c, err, http.StatusInternalServerError)
-		return
+		c.JSON(code, gin.H{
+			"error":  err.Error(),
+			"status": code,
+		})
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"error": nil,
 		"data":  true,
 	})
+}
+
+// AddReferral : add referral to the user
+func (h *Handlers) AddReferral(c *gin.Context) {
+	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
+	referralTicket := viper.GetInt("app.referralTicket")
+	referralCorrector := viper.GetInt("app.referralTicket")
+	code, err := updateUserInfo(h.Context.AuthUser.ID, uint(referralTicket), uint(referralCorrector), &r)
+	if err != nil {
+		c.JSON(code, gin.H{
+			"error":  err.Error(),
+			"status": code,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"error": nil,
+		"data":  true,
+	})
+}
+
+func updateUserInfo(uID string, tickets, correctors uint, r *repository.Connections) (int, error) {
+	uinfo, err := r.GetUserInfo(uID)
+	if err != nil {
+		return http.StatusBadRequest, err
+	}
+	if tickets > 0 {
+		uinfo.Tickets = tickets
+		uinfo.CanPlay = true
+	}
+	if correctors > 0 {
+		uinfo.Correctors = correctors
+	}
+	err = r.AddUserInfo(uinfo)
+	if err != nil {
+		return http.StatusInternalServerError, nil
+	}
+	return 200, nil
 }
