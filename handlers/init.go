@@ -52,6 +52,7 @@ func Setup(r *gin.Engine, appCtx *context.AppContext) {
 	// admin.Use(middleware.Auth(appCtx, appCtx.AdminKey))
 
 	// admin routes
+	admin.Use(middleware.IPCheck())
 	admin.POST("contest/meta", vh.AddMetaContest)
 	admin.POST("contest/question", vh.AttachQuestion)
 
@@ -59,5 +60,7 @@ func Setup(r *gin.Engine, appCtx *context.AppContext) {
 	contest.GET("meta", vh.FindContestMeta)
 	contest.POST("answer", vh.PostAnswer)
 	contest.POST("store", vh.UpdateUserInfo)
-	contest.POST("referral", )
+
+	contest.POST("referral", middleware.IPCheck(), vh.AddReferral)
+	contest.POST("user", middleware.IPCheck(), vh.NewUser)
 }
