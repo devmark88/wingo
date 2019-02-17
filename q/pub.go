@@ -8,7 +8,6 @@ import (
 	"github.com/RichardKnop/machinery/v1"
 	"github.com/RichardKnop/machinery/v1/tasks"
 	"gitlab.com/mt-api/wingo/logger"
-	"gitlab.com/mt-api/wingo/response"
 )
 
 // Pub : Publish queue server
@@ -16,15 +15,15 @@ type Pub struct {
 	Server *machinery.Server
 }
 
-// PublishQuestion : Send Delayed job task
-func (s *Pub) PublishQuestion(topic string, delay int, res response.QuestionPayload) error {
+//PublishDelayed : Send Delayed job task
+func (s *Pub) PublishDelayed(topic string, delay int, res interface{}) error {
 	var args []tasks.Arg
 	topicArg := &tasks.Arg{
 		Name:  "t",
 		Type:  "string",
 		Value: topic,
 	}
-	res.Type = response.QuestionPayloadEnum
+
 	ps, _ := json.Marshal(res)
 
 	payloadArg := &tasks.Arg{

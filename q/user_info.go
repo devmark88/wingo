@@ -16,6 +16,6 @@ func (q QueueManager) PublishUserInfo(c *model.UserInfo, srv *machinery.Server) 
 	res.Ticket = c.Tickets
 	res.CanPlay = c.CanPlay
 
-	e := pub.Publish(getUserTopic(c.ID), res)
+	e := pub.Publish(GetUserTopicName(c.ID), res)
 	return e
 }

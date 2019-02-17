@@ -10,6 +10,12 @@ type QuestionPayload struct {
 	Type      string `json:"type"`
 }
 
+// DeadlinePayload : payload data for Question message
+type DeadlinePayload struct {
+	ContestID uint   `josn:"cid"`
+	Type      string `json:"type"`
+}
+
 // UserInfoPayload : payload data for Question message
 type UserInfoPayload struct {
 	ID        string `json:"id"`

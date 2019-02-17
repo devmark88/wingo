@@ -6,4 +6,7 @@ const (
 
 	// UserInfoPayloadEnum : type name of question message
 	UserInfoPayloadEnum = "user_info"
+
+	// DeadlinePayloadEnum : type name of deadline message
+	DeadlinePayloadEnum = "deadline"
 )
