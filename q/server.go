@@ -30,7 +30,9 @@ func Start(n int) (*machinery.Server, *[]machinery.Worker, error) {
 	var workers []machinery.Worker
 	for i := 0; i < n; i++ {
 		worker := server.NewWorker(fmt.Sprintf("worker_%v", i), 10)
-		go worker.Launch()
+		go func() {
+			worker.Launch()
+		}()
 
 		workers = append(workers, *worker)
 	}
