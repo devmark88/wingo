@@ -9,7 +9,7 @@ func GetUserTopicName(userID string) string {
 
 // GetQuestionTopicName : get topic name for question
 func GetQuestionTopicName(contestMetaID uint) string {
-	return fmt.Sprintf("ccontest%v", contestMetaID)
+	return fmt.Sprintf("tpc:contest:%v", contestMetaID)
 }
 
 // GetDeadlineTopicName : get topic name for deadline
