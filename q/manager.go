@@ -59,3 +59,24 @@ func (q QueueManager) PushQuestions(c *model.Contest, srv *machinery.Server) err
 	}
 	return nil
 }
+
+// PushDeadline : push job to deadline queue
+func (q QueueManager) PushDeadline(c *model.Contest, srv *machinery.Server) error {
+	pub := Pub{Server: srv}
+	bt := c.Meta.BeginTime.UTC()
+	now := time.Now().UTC()
+	logger.Debug(fmt.Sprintf("%v - %v", bt.String(), now.String()))
+	d := bt.Sub(now).Seconds()
+	logger.Debug(fmt.Sprintf("DIFF SEC | INT = %v|%v", d, int(d)))
+	if d <= 0 {
+		return fmt.Errorf("begin time is %s, you can not add question to this contest anymore", c.Meta.BeginTime.String())
+	}
+	vd := viper.GetInt("app.video_duration")
+	tpc := getDeadlineTopic(c.ID)
+	p := response.DeadlinePayload{}
+	p.ContestID = c.ID
+	p.Type = response.DeadlinePayloadEnum
+	delay := int(d) - vd
+	e := pub.PublishDelayed(tpc, delay, p)
+	return e
+}
