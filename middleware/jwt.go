@@ -30,6 +30,7 @@ type labelClaim struct {
 	PersianName string `json:"faName"`
 }
 
+// Auth : authenticate user with JWT token
 func Auth(app *context.AppContext, rsaPub *rsa.PublicKey) gin.HandlerFunc {
 	var cls appClaim
 	return func(c *gin.Context) {

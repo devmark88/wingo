@@ -1,5 +1,6 @@
 server: 
   address: ":9080"
+  cidr_ip_whitelist: "*"
 database:
   host: "localhost"
   port: 5432
@@ -28,6 +29,13 @@ app:
     default_hour: "9"
     default_min: "30"
     default_sec: "00"
+  referral_tickets: 0
+  referral_correctors: 0
+  referer_tickets: 0
+  referer_correctors: 0
+  new_user_ticket: 0
+  new_user_corrector: 0
+
 emq:
   base: "http://localhost:8080"
   auth:
