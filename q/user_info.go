@@ -7,7 +7,7 @@ import (
 )
 
 // PublishUserInfo : Publish User corrector and ticket
-func (q Question) PublishUserInfo(c model.UserInfo, srv *machinery.Server) error {
+func (q QueueManager) PublishUserInfo(c *model.UserInfo, srv *machinery.Server) error {
 	pub := Pub{Server: srv}
 	res := response.UserInfoPayload{}
 	res.Type = response.UserInfoPayloadEnum
