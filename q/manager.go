@@ -35,7 +35,7 @@ func (q QueueManager) PushQuestions(c *model.Contest, srv *machinery.Server) err
 	}
 	itemDuration := int(c.Meta.Duration / uint(len(c.Questions)))
 	answerWaiting := viper.GetInt("app.answer_delay")
-	tpc := getQuestionTopic(c.Meta.ID)
+	tpc := GetQuestionTopicName(c.Meta.ID)
 
 	for idx, q := range c.Questions {
 		p := response.QuestionPayload{}
@@ -72,7 +72,7 @@ func (q QueueManager) PushDeadline(c *model.Contest, srv *machinery.Server) erro
 		return fmt.Errorf("begin time is %s, you can not add question to this contest anymore", c.Meta.BeginTime.String())
 	}
 	vd := viper.GetInt("app.video_duration")
-	tpc := getDeadlineTopic(c.ID)
+	tpc := GetDeadlineTopicName(c.Meta.ID)
 	p := response.DeadlinePayload{}
 	p.ContestID = c.ID
 	p.Type = response.DeadlinePayloadEnum
