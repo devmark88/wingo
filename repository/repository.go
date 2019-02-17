@@ -84,7 +84,7 @@ func (cn *Connections) GetUserInfo(id string) (*model.UserInfo, error) {
 // AddUserInfo : add user info to the database
 func (cn *Connections) AddUserInfo(u *model.UserInfo) error {
 	r := user.SaveRepository{}
-	err := r.SaveUserInfo(u, cn.DB)
+	err := r.SaveUserInfo(u, cn.DB, cn.Queue)
 	if err != nil {
 		c := CacheAdapter{Connection: cn.Redis}
 		e := c.InvalidateUserInfo(u.ID)
