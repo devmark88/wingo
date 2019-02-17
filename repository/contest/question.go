@@ -50,7 +50,8 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *mac
 	db.Where("id = ?", m.ContestMetaID).First(&meta)
 	m.Meta = meta
 	g := q.QueueManager{}
-	e := g.PublishAll(*m, srv)
+
+	e := g.PushQuestions(m, srv)
 	if e != nil {
 		logger.Error(e)
 		logger.Debug("rolling back the transaction")
@@ -58,6 +59,8 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *mac
 		logger.Debug("transaction rolled back")
 		return e
 	}
+	e = g.PushDeadline(m, srv)
+
 	if result := tx.Commit(); result.Error != nil {
 		tx.Rollback()
 		return fmt.Errorf(fmt.Sprintf(messages.GeneralDBError, result.GetErrors()))
