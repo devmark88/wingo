@@ -15,11 +15,11 @@ import (
 	"gitlab.com/mt-api/wingo/model"
 )
 
-//Question ...
-type Question struct{}
+//QueueManager ...
+type QueueManager struct{}
 
 // PublishAll : Publish all questions of a contest
-func (q Question) PublishAll(c model.Contest, srv *machinery.Server) error {
+func (q QueueManager) PublishAll(c model.Contest, srv *machinery.Server) error {
 	pub := Pub{Server: srv}
 	if len(c.Questions) == 0 {
 		return fmt.Errorf("No question to publish for contest meta: %v", c.Meta.ID)
