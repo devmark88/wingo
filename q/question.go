@@ -15,11 +15,11 @@ import (
 	"gitlab.com/mt-api/wingo/model"
 )
 
-//Question ...
-type Question struct{}
+//QueueManager ...
+type QueueManager struct{}
 
 // PublishAll : Publish all questions of a contest
-func (q Question) PublishAll(c model.Contest, srv *machinery.Server) error {
+func (q QueueManager) PublishAll(c model.Contest, srv *machinery.Server) error {
 	pub := Pub{Server: srv}
 	if len(c.Questions) == 0 {
 		return fmt.Errorf("No question to publish for contest meta: %v", c.Meta.ID)
@@ -33,9 +33,9 @@ func (q Question) PublishAll(c model.Contest, srv *machinery.Server) error {
 	if d <= 0 {
 		return fmt.Errorf("begin time is %s, you can not add question to this contest anymore", c.Meta.BeginTime.String())
 	}
-	itemDuration := int(c.Meta.Duration / uint16(len(c.Questions)))
+	itemDuration := int(c.Meta.Duration / uint(len(c.Questions)))
 	answerWaiting := viper.GetInt("app.answer_delay")
-	tpc := fmt.Sprintf("contest%v", c.Meta.ID)
+	tpc := getQuestionTopic(c.Meta.ID)
 
 	for idx, q := range c.Questions {
 		p := response.QuestionPayload{}

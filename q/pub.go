@@ -49,3 +49,31 @@ func (s *Pub) PublishQuestion(topic string, delay int, res response.QuestionPayl
 	}
 	return nil
 }
+
+// Publish : Send Job
+func (s *Pub) Publish(topic string, res interface{}) error {
+	var args []tasks.Arg
+	topicArg := &tasks.Arg{
+		Name:  "t",
+		Type:  "string",
+		Value: topic,
+	}
+	ps, _ := json.Marshal(res)
+
+	payloadArg := &tasks.Arg{
+		Name:  "payload",
+		Type:  "string",
+		Value: string(ps),
+	}
+	args = append(args, *topicArg)
+	args = append(args, *payloadArg)
+
+	signature, err := tasks.NewSignature("publish", args)
+	if err != nil {
+		return fmt.Errorf("error while creating signature: %v", err)
+	}
+	logger.Debug(fmt.Sprintf("sending tasks: topic: %s", topic))
+
+	_, err = s.Server.SendTask(signature)
+	return err
+}

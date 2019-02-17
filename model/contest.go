@@ -1,10 +1,15 @@
 package model
 
 import (
+	"fmt"
 	"time"
 
-	"github.com/spf13/viper"
+	"gitlab.com/mt-api/wingo/logger"
+	"gitlab.com/mt-api/wingo/messages"
+
 	"gitlab.com/mt-api/wingo/helpers"
+
+	"github.com/spf13/viper"
 )
 
 // Contest : Contest Model
@@ -47,4 +52,40 @@ func (c *Contest) GetQuestionIndex(id uint) int {
 		}
 	}
 	return idx
+}
+
+// IsItCorrectAnswer : is selectedAnswerIndex is corrected answer
+func (c *Contest) IsItCorrectAnswer(selectedAnswerIndex int, qID uint) bool {
+	if selectedAnswerIndex < 0 {
+		return false
+	}
+	qidx := c.GetQuestionIndex(qID)
+	ca, err := helpers.StringToIntArray(c.CorrectAnswersIndices, ",")
+	if err != nil {
+		logger.Error(fmt.Sprintf(messages.ErrorInSplitCorrectAnswerIndices, qID, err))
+		return false
+	}
+	if qidx > len(c.Questions)-1 {
+		logger.Error(fmt.Sprintf(messages.WrongIndexInSetAnsewr, len(c.Questions)-1, selectedAnswerIndex, c.ID, qID))
+		return false
+	}
+	return selectedAnswerIndex == ca[qidx]
+}
+
+// CaneYetUserCorrector : can user use correct in particular question
+func (c *Contest) CaneYetUserCorrector(u *UserInfo, ut *UserTrack, qidx int) bool {
+	if ut == nil {
+		return c.Meta.AllowedCorrectorUsageTimes > 0 && u.Correctors >= c.Meta.NeededCorrectors
+	}
+	return ut.CanPlay && c.Meta.AllowedCorrectorUsageTimes > ut.CorrectorUsageTimes && c.Meta.AllowCorrectTilQuestion-1 > uint(qidx)
+}
+
+// IsItFirstQuestion : is particular question the first question
+func (c *Contest) IsItFirstQuestion(qidx int) bool {
+	return len(c.Questions) > 0 && qidx == 0
+}
+
+// IsItLastQuestion : is particular question the latest question
+func (c *Contest) IsItLastQuestion(qidx int) bool {
+	return qidx == len(c.Questions)-1
 }

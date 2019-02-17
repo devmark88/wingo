@@ -6,7 +6,7 @@ type GetMetaResponse struct {
 	NextContestInMinutes     string     `json:"minToNextContest"`
 	NextContestInSeconds     string     `json:"secToNextContest"`
 	Prize                    uint       `json:"nextRoundPrice"`
-	NextContestNeededTickets byte       `json:"incomeTicketCount"`
+	NextContestNeededTickets uint       `json:"incomeTicketCount"`
 	Tickets                  uint       `json:"userCredit"`
 	Correctors               uint       `json:"correctorCount"`
 	SeekSeconds              uint       `json:"seekSeconds"`

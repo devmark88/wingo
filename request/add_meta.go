@@ -12,11 +12,11 @@ type AddMetaRequest struct {
 	Title                      string    `json:"title" xml:"title" binding:"required"`
 	Prize                      uint      `json:"prize" xml:"prize" binding:"required"`
 	BeginTime                  time.Time `json:"beginDateTime" xml:"beginDateTime" binding:"required"`
-	Duration                   uint16    `json:"duration" xml:"duration" binding:"required"`
-	NeededCorrectors           uint8     `json:"corrector" xml:"corrector" binding:"required"`
-	AllowedCorrectorUsageTimes uint8     `json:"correctorUsageLimit" xml:"correctorUsageLimit" binding:"required"`
-	AllowCorrectTilQuestion    uint8     `json:"allowCorrectTilQuestion" xml:"allowCorrectTilQuestion" binding:"required"`
-	NeededTickets              uint8     `json:"incomingCost" xml:"incomingCost" binding:"required"`
+	Duration                   uint      `json:"duration" xml:"duration" binding:"required"`
+	NeededCorrectors           uint      `json:"corrector" xml:"corrector" binding:"required"`
+	AllowedCorrectorUsageTimes uint      `json:"correctorUsageLimit" xml:"correctorUsageLimit" binding:"required"`
+	AllowCorrectTilQuestion    uint      `json:"allowCorrectTilQuestion" xml:"allowCorrectTilQuestion" binding:"required"`
+	NeededTickets              uint      `json:"incomingCost" xml:"incomingCost" binding:"required"`
 }
 
 // ToModel : map requests dto to the model

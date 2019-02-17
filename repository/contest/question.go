@@ -49,7 +49,7 @@ func (r *QuestionRepository) SaveContest(m *model.Contest, db *gorm.DB, srv *mac
 	var meta model.ContestMeta
 	db.Where("id = ?", m.ContestMetaID).First(&meta)
 	m.Meta = meta
-	g := q.Question{}
+	g := q.QueueManager{}
 	e := g.PublishAll(*m, srv)
 	if e != nil {
 		logger.Error(e)

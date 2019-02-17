@@ -9,3 +9,12 @@ type QuestionPayload struct {
 	Options   string `json:"options"`
 	Type      string `json:"type"`
 }
+
+// UserInfoPayload : payload data for Question message
+type UserInfoPayload struct {
+	ID        string `json:"id"`
+	Ticket    uint   `josn:"ticket"`
+	Corrector uint   `json:"corrector"`
+	CanPlay   bool   `json:"canPlay"`
+	Type      string `json:"type"`
+}
