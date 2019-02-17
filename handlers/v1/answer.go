@@ -12,8 +12,7 @@ import (
 
 // PostAnswer : an answer posted by clients
 func (h *Handlers) PostAnswer(c *gin.Context) {
-	//TODO: reduce user ticket
-
+	// reduce user ticket
 	var m request.PostAnswer
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
 	c.Header("Content-Type", "application/json; charset=utf-8")
@@ -43,13 +42,19 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 		attachErrorToContext(c, err, http.StatusBadRequest)
 		return
 	}
+	if uinfo.Tickets < contest.Meta.NeededTickets {
+		uinfo.Tickets -= contest.Meta.NeededTickets
+		track.CanPlay = true
+	} else {
+		track.CanPlay = false
+	}
 	track.UserID = uid
 	track.ContestID = contest.ID
 	track.QuestionID = m.QuestionID
 	track.QuestionIndex = qidx
 
 	if contest.IsItFirstQuestion(qidx) {
-		if uinfo.CanPlay == false {
+		if !uinfo.CanPlay || !track.CanPlay {
 			attachErrorToContext(c, err, http.StatusPreconditionFailed)
 			return
 		}
@@ -72,6 +77,8 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 				} else {
 					track.CanUseCorrector = false
 				}
+			} else {
+				track.CanPlay = false
 			}
 		}
 	} else {
@@ -104,6 +111,8 @@ func (h *Handlers) PostAnswer(c *gin.Context) {
 				} else {
 					track.CanUseCorrector = false
 				}
+			} else {
+				track.CanPlay = false
 			}
 		}
 	}
