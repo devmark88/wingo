@@ -12,7 +12,6 @@ import (
 
 // PostAnswer : an answer posted by clients
 func (h *Handlers) PostAnswer(c *gin.Context) {
-	// reduce user ticket
 	var m request.PostAnswer
 	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
 	c.Header("Content-Type", "application/json; charset=utf-8")
