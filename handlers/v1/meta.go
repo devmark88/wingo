@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"gitlab.com/mt-api/wingo/q"
+
 	"github.com/spf13/viper"
 
 	"gitlab.com/mt-api/wingo/helpers"
@@ -16,6 +18,38 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/mt-api/wingo/repository"
 )
+
+// GetContestConfig : get contest config
+func (h *Handlers) GetContestConfig(c *gin.Context) {
+	r := repository.Connections{DB: h.Context.Connections.Database, Redis: h.Context.Connections.Cache, Queue: h.Context.Q.Server}
+	c.Header("Content-Type", "application/json; charset=utf-8")
+	u, err := r.GetUserInfo(h.Context.AuthUser.ID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":  err.Error(),
+			"status": http.StatusBadRequest,
+		})
+		return
+	}
+	m, err := r.GetTodaysContestMeta(true)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":  err.Error(),
+			"status": http.StatusBadRequest,
+		})
+		return
+	}
+	meta := *m
+	ch := []string{}
+	ch = append(ch, q.GetUserTopicName(u.ID))
+	ch = append(ch, q.GetQuestionTopicName(meta[0].ID))
+	c.JSON(http.StatusOK, gin.H{
+		"error": nil,
+		"data": gin.H{
+			"channels": ch,
+		},
+	})
+}
 
 // FindContestMeta : get today contest meta data
 func (h *Handlers) FindContestMeta(c *gin.Context) {
