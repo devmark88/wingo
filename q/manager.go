@@ -18,8 +18,8 @@ import (
 //QueueManager ...
 type QueueManager struct{}
 
-// PublishAll : Publish all questions of a contest
-func (q QueueManager) PublishAll(c model.Contest, srv *machinery.Server) error {
+// PushQuestions : Publish all questions of a contest
+func (q QueueManager) PushQuestions(c *model.Contest, srv *machinery.Server) error {
 	pub := Pub{Server: srv}
 	if len(c.Questions) == 0 {
 		return fmt.Errorf("No question to publish for contest meta: %v", c.Meta.ID)
@@ -44,6 +44,7 @@ func (q QueueManager) PublishAll(c model.Contest, srv *machinery.Server) error {
 		p.Index = idx
 		p.Options = q.Answers
 		p.ContestID = c.ID
+		p.Type = response.QuestionPayloadEnum
 		delay := 0
 		if idx == 0 {
 			delay = int(d)
@@ -51,7 +52,7 @@ func (q QueueManager) PublishAll(c model.Contest, srv *machinery.Server) error {
 			delay = int(d) + idx*(itemDuration+answerWaiting)
 		}
 		logger.Debug(fmt.Sprintf("publishing: index=%v, delay=%v, topic: %s", idx, delay, tpc))
-		e := pub.PublishQuestion(tpc, delay, p)
+		e := pub.PublishDelayed(tpc, delay, p)
 		if e != nil {
 			return e
 		}
